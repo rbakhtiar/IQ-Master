@@ -68,7 +68,6 @@ function start1v1(){
 }
 
 // make enemy score randomly when you answer
-document.addEventListener("click", function(e){
   if(e.target.tagName === "BUTTON" && e.target.innerText !== "Submit"){
     if(Math.random() > 0.5){
       enemyScore++;
@@ -234,7 +233,52 @@ window.miniGame=function(){
 } catch(e){
   document.body.innerHTML="<h1>Error: "+e.message+"</h1>";
 }
-</script>
+</script
+  let enemyScore = 0;
+let is1v1 = false;
 
+function start1v1(){
+  enemyScore = 0;
+  score = 0;
+  current = 0;
+  is1v1 = true;
+
+  alert("Opponent found 🤖");
+
+  startGame('mcq');
+}
+
+const oldCheck = check;
+check = function(ans){
+  if(is1v1 && Math.random() > 0.5){
+    enemyScore++;
+  }
+  oldCheck(ans);
+}
+
+const oldSubmit = submitAnswer;
+submitAnswer = function(){
+  if(is1v1 && Math.random() > 0.5){
+    enemyScore++;
+  }
+  oldSubmit();
+}
+
+const oldEnd = endGame;
+endGame = function(){
+  oldEnd();
+
+  if(is1v1){
+    let result = "";
+    if(score > enemyScore) result = "You Win 🏆";
+    else if(score < enemyScore) result = "You Lose 😢";
+    else result = "Draw 🤝";
+
+    document.getElementById("scoreText").innerText +=
+      "\nOpponent: " + enemyScore + "\n" + result;
+  }
+
+  is1v1 = false;
+}
 </body>
 </html>
