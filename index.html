@@ -10,7 +10,7 @@ body {
   font-family:Arial;
   text-align:center;
   color:white;
-  background: linear-gradient(135deg,#020617,#0ea5e9);
+  background: linear-gradient(135deg,#020617,#7c3aed);
 }
 
 h1 { margin-top:20px; }
@@ -19,8 +19,8 @@ button {
   padding:15px;
   margin:10px;
   border:none;
-  border-radius:10px;
-  background:#0ea5e9;
+  border-radius:12px;
+  background:#7c3aed;
   color:white;
   width:80%;
   font-size:16px;
@@ -29,10 +29,7 @@ button {
 .screen { display:none; }
 .active { display:block; }
 
-#timer {
-  font-size:20px;
-  margin:10px;
-}
+#timer { font-size:20px; }
 
 input {
   padding:10px;
@@ -48,8 +45,17 @@ input {
 <h1>🧠 IQ Master</h1>
 
 <div id="menu" class="screen active">
-  <button onclick="startGame('mcq')">MCQ Mode</button>
-  <button onclick="startGame('typing')">Typing Mode</button>
+  <button onclick="chooseMode('mcq')">MCQ Mode</button>
+  <button onclick="chooseMode('typing')">Typing Mode</button>
+  <button onclick="startMini()">Memory Game</button>
+</div>
+
+<div id="level" class="screen">
+  <h2>Select Level</h2>
+  <button onclick="startGame('easy')">Easy</button>
+  <button onclick="startGame('medium')">Medium</button>
+  <button onclick="startGame('hard')">Hard</button>
+  <button onclick="startGame('einstein')">Einstein</button>
 </div>
 
 <div id="game" class="screen">
@@ -62,111 +68,125 @@ input {
 </div>
 
 <div id="result" class="screen">
-  <h2 id="scoreText"></h2>
+  <h2 id="resultText"></h2>
   <button onclick="location.reload()">Play Again</button>
 </div>
 
 <script>
-try {
+let mode="", level="";
+let score=0, current=0, timer, timeLeft=10;
 
-let mode = "mcq";
-let score = 0;
-let current = 0;
-let timer;
-let timeLeft = 10;
+let questionSets = {
+easy:[
+ {q:"2+2=?",a:"4",o:["3","4","5"]},
+ {q:"3+5=?",a:"8",o:["6","8","9"]}
+],
+medium:[
+ {q:"12×2=?",a:"24",o:["20","24","26"]},
+ {q:"Capital of Italy?",a:"Rome",o:["Rome","Paris","Berlin"]}
+],
+hard:[
+ {q:"√144=?",a:"12",o:["10","12","14"]},
+ {q:"Force unit?",a:"Newton",o:["Joule","Newton","Watt"]}
+],
+einstein:[
+ {q:"E=mc² relates to?",a:"energy",o:["mass","energy","force"]},
+ {q:"Integral of x dx?",a:"x^2/2",o:["x^2","x^2/2","2x"]}
+]
+};
 
-const questions = [
-  {q:"2+2=?", a:"4", o:["3","4","5"]},
-  {q:"5×3=?", a:"15", o:["10","15","20"]},
-  {q:"Capital of France?", a:"Paris", o:["Rome","Paris","Berlin"]},
-  {q:"10/2=?", a:"5", o:["2","5","8"]}
-];
-
-window.startGame = function(m){
-  mode = m;
-  document.getElementById("menu").classList.remove("active");
-  document.getElementById("game").classList.add("active");
-  loadQuestion();
+function chooseMode(m){
+  mode=m;
+  show("level");
 }
 
-function loadQuestion(){
-  if(current >= questions.length){
-    endGame();
-    return;
-  }
+function startGame(l){
+  level=l;
+  score=0;
+  current=0;
+  show("game");
+  loadQ();
+}
 
-  let q = questions[current];
-  document.getElementById("question").innerText = q.q;
+function loadQ(){
+  let set=questionSets[level];
+  if(current>=set.length){ endGame(); return; }
 
-  let ansDiv = document.getElementById("answers");
-  ansDiv.innerHTML = "";
+  let q=set[current];
+  document.getElementById("question").innerText=q.q;
+  let ansDiv=document.getElementById("answers");
+  ansDiv.innerHTML="";
 
-  if(mode === "mcq"){
-    document.getElementById("inputAnswer").style.display = "none";
-
+  if(mode==="mcq"){
+    document.getElementById("inputAnswer").style.display="none";
     q.o.forEach(opt=>{
-      let btn = document.createElement("button");
-      btn.innerText = opt;
-      btn.onclick = function(){ check(opt); };
-      ansDiv.appendChild(btn);
+      let b=document.createElement("button");
+      b.innerText=opt;
+      b.onclick=()=>check(opt);
+      ansDiv.appendChild(b);
     });
-
   } else {
-    document.getElementById("inputAnswer").style.display = "block";
+    document.getElementById("inputAnswer").style.display="block";
   }
 
   startTimer();
 }
 
 function startTimer(){
-  timeLeft = 10;
-  document.getElementById("timer").innerText = timeLeft;
+  timeLeft=10;
+  document.getElementById("timer").innerText=timeLeft;
 
   clearInterval(timer);
-  timer = setInterval(()=>{
+  timer=setInterval(()=>{
     timeLeft--;
-    document.getElementById("timer").innerText = timeLeft;
+    document.getElementById("timer").innerText=timeLeft;
 
-    if(timeLeft <= 0){
+    if(timeLeft<=0){
       current++;
-      loadQuestion();
+      loadQ();
     }
   },1000);
 }
 
 function check(ans){
-  if(ans === questions[current].a){
-    score++;
-  }
+  if(ans===questionSets[level][current].a) score++;
   current++;
-  loadQuestion();
+  loadQ();
 }
 
-window.submitAnswer = function(){
-  let val = document.getElementById("inputAnswer").value;
-
-  if(val.toLowerCase() === questions[current].a.toLowerCase()){
-    score++;
-  }
-
+function submitAnswer(){
+  let val=document.getElementById("inputAnswer").value;
+  if(val.toLowerCase()===questionSets[level][current].a.toLowerCase()) score++;
   current++;
-  loadQuestion();
+  loadQ();
 }
 
 function endGame(){
   clearInterval(timer);
+  let iq=90+score*15;
 
-  document.getElementById("game").classList.remove("active");
-  document.getElementById("result").classList.add("active");
+  let rank="Beginner";
+  if(iq>140) rank="Einstein";
+  else if(iq>120) rank="Genius";
+  else if(iq>100) rank="Smart";
 
-  let iq = 90 + score * 10;
+  document.getElementById("resultText").innerText=
+  "Score: "+score+" | IQ: "+iq+" | "+rank;
 
-  document.getElementById("scoreText").innerText =
-    "Score: " + score + " | IQ: " + iq;
+  show("result");
 }
 
-} catch(e) {
-  document.body.innerHTML = "<h1>Error: "+e.message+"</h1>";
+function startMini(){
+  let num=Math.floor(Math.random()*100);
+  let guess=prompt("Remember this number: "+num);
+  let ans=prompt("Enter it again:");
+  if(ans==num) alert("Correct!");
+  else alert("Wrong!");
+}
+
+function show(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
 }
 </script>
 
