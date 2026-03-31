@@ -59,6 +59,33 @@ input{padding:10px;border-radius:8px;border:none;}
 </div>
 
 <script>
+let enemyScore = 0;
+
+function start1v1(){
+  enemyScore = 0;
+  score = 0;
+  current = 0;
+  alert("Opponent found 🤖");
+  startGame('mcq');
+}
+
+// make enemy score randomly when you answer
+document.addEventListener("click", function(e){
+  if(e.target.tagName === "BUTTON" && e.target.innerText !== "Submit"){
+    if(Math.random() > 0.5){
+      enemyScore++;
+    }
+  }
+});
+
+// show result at end
+const oldEnd = endGame;
+endGame = function(){
+  oldEnd();
+  let text = document.getElementById("scoreText").innerText;
+  document.getElementById("scoreText").innerText =
+    text + "\nOpponent: " + enemyScore;
+}
 try {
 
 let mode="", level="";
