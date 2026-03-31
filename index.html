@@ -1,39 +1,86 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IQ Master</title>
-
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#020617">
-
-  <style>
-    body {
-      background: linear-gradient(135deg,#020617,#0ea5e9);
-      color:white;
-      text-align:center;
-      font-family:Arial;
-    }
-    button {
-      padding:14px;
-      margin:6px;
-      border:none;
-      border-radius:10px;
-      background:#0ea5e9;
-      color:white;
-      width:80%;
-    }
-  </style>
-</head>
-
-<body>
-
-<h1>IQ Master 🧠</h1>
-<div id="app"></div>
-
 <script>
-/* PASTE YOUR FULL JS CODE HERE (the big one I gave you) */
-</script>
+document.addEventListener("DOMContentLoaded", () => {
 
-</body>
-</html>
+let screen = "home";
+let index = 0;
+let score = 0;
+
+const questions = [
+  ["2+2=?", "4"],
+  ["5×6=?", "30"],
+  ["Basic unit of life?", "cell"],
+  ["Force = mass × ?", "acceleration"],
+  ["√144=?", "12"],
+  ["Speed of light?", "300000"]
+];
+
+function render() {
+  const app = document.getElementById("app");
+
+  if (!app) return;
+
+  if (screen === "home") {
+    app.innerHTML = `
+      <button onclick="start()">Start Test 🚀</button>
+    `;
+  }
+
+  if (screen === "quiz") {
+    app.innerHTML = `
+      <p>Question ${index+1}/${questions.length}</p>
+      <h2>${questions[index][0]}</h2>
+      <input id="ans" placeholder="Your answer"/>
+      <br>
+      <button onclick="next()">Next</button>
+    `;
+  }
+
+  if (screen === "result") {
+    let iq = 90 + (score * 6);
+    let rank = "Beginner";
+
+    if (iq > 140) rank = "Genius";
+    else if (iq > 125) rank = "Advanced";
+    else if (iq > 110) rank = "Skilled";
+
+    app.innerHTML = `
+      <h2>Score: ${score}</h2>
+      <h2>IQ: ${iq}</h2>
+      <h3>${rank}</h3>
+      <button onclick="restart()">Play Again</button>
+    `;
+  }
+}
+
+window.start = function() {
+  index = 0;
+  score = 0;
+  screen = "quiz";
+  render();
+}
+
+window.next = function() {
+  let input = document.getElementById("ans").value.toLowerCase();
+
+  if (input === questions[index][1]) {
+    score++;
+  }
+
+  index++;
+
+  if (index >= questions.length) {
+    screen = "result";
+  }
+
+  render();
+}
+
+window.restart = function() {
+  screen = "home";
+  render();
+}
+
+render();
+
+});
+</script>
