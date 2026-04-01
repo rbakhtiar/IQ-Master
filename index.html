@@ -101,7 +101,17 @@ function start(){
   score=0;
   current=0;
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-  document.getElementById("game").classList.add("active");
+  let iq = 90 + score * 10;
+
+let level = "Beginner";
+if(iq > 140) level = "Einstein 🧠";
+else if(iq > 120) level = "Genius";
+else if(iq > 100) level = "Smart";
+
+document.getElementById("scoreText").innerText =
+  "Score: " + score +
+  "\nIQ: " + iq +
+  "\nLevel: " + level;
   loadQuestion();
 }
 
