@@ -170,6 +170,10 @@ function endGame(){
   document.body.innerHTML = "<h1>Error: "+e.message+"</h1>";
 }
 </script>
-
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js');
+}
+</script>
 </body>
 </html>
