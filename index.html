@@ -223,6 +223,8 @@ function goMenu(){
   document.getElementById("menu").classList.add("active");
 }
 </script>
-
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
+}
 </body>
 </html>
