@@ -5,21 +5,41 @@
 <title>IQ Master</title>
 
 <style>
-body{
+body {
   margin:0;
   font-family:Arial;
   text-align:center;
   color:white;
-  background:linear-gradient(135deg,#020617,#0ea5e9);
+  background: linear-gradient(135deg,#020617,#0ea5e9);
 }
-button{
-  padding:12px;margin:6px;border:none;border-radius:10px;
-  background:#0ea5e9;color:white;width:85%;
+
+h1 { margin-top:20px; }
+
+button {
+  padding:15px;
+  margin:10px;
+  border:none;
+  border-radius:10px;
+  background:#0ea5e9;
+  color:white;
+  width:80%;
+  font-size:16px;
 }
-.screen{display:none;}
-.active{display:block;}
-#timer{font-size:20px;margin:10px;}
-input{padding:10px;border-radius:8px;border:none;}
+
+.screen { display:none; }
+.active { display:block; }
+
+#timer {
+  font-size:20px;
+  margin:10px;
+}
+
+input {
+  padding:10px;
+  width:70%;
+  border-radius:8px;
+  border:none;
+}
 </style>
 </head>
 
@@ -28,257 +48,150 @@ input{padding:10px;border-radius:8px;border:none;}
 <h1>🧠 IQ Master</h1>
 
 <div id="menu" class="screen active">
- <button onclick="startGame('mcq')">MCQ Mode</button>
+  <button onclick="startGame('mcq')">MCQ Mode</button>
   <button onclick="startGame('typing')">Typing Mode</button>
   <button onclick="start1v1()">⚔️ 1v1 Battle</button>
-  <button onclick="startgame(minigame)">minigame</button> 
-
-<div id="level" class="screen">
-  <h3>Select Level</h3>
-  <button onclick="startGame('easy')">Easy</button>
-  <button onclick="startGame('medium')">Medium</button>
-  <button onclick="startGame('hard')">Hard</button>
-  <button onclick="startGame('einstein')">Einstein 🔥</button>
 </div>
 
 <div id="game" class="screen">
   <div id="timer">10</div>
-  <h3 id="question"></h3>
+  <h2 id="question"></h2>
   <div id="answers"></div>
-  <input id="input" placeholder="Type answer" style="display:none">
+  <input id="inputAnswer" placeholder="Type answer..." style="display:none">
   <br>
   <button onclick="submitAnswer()">Submit</button>
 </div>
 
 <div id="result" class="screen">
-  <h2 id="resultText"></h2>
-  <h3 id="leaderboard"></h3>
-  <button onclick="location.reload()">Restart</button>
+  <h2 id="scoreText"></h2>
+  <button onclick="location.reload()">Play Again</button>
 </div>
 
 <script>
+let mode = "mcq";
+let score = 0;
 let enemyScore = 0;
+let current = 0;
+let timer;
+let timeLeft = 10;
+
+const questions = [
+  {q:"2+2=?", a:"4", o:["3","4","5"]},
+  {q:"5×3=?", a:"15", o:["10","15","20"]},
+  {q:"Capital of France?", a:"Paris", o:["Rome","Paris","Berlin"]},
+  {q:"10/2=?", a:"5", o:["2","5","8"]}
+];
+
+function startGame(m){
+  mode = m;
+  score = 0;
+  current = 0;
+
+  document.getElementById("menu").classList.remove("active");
+  document.getElementById("game").classList.add("active");
+
+  loadQuestion();
+}
 
 function start1v1(){
   enemyScore = 0;
-  score = 0;
-  current = 0;
-  alert("Opponent found 🤖");
   startGame('mcq');
 }
 
-// make enemy score randomly when you answer
-  if(e.target.tagName === "BUTTON" && e.target.innerText !== "Submit"){
-    if(Math.random() > 0.5){
-      enemyScore++;
-    }
-  }
-});
-
-// show result at end
-const oldEnd = endGame;
-endGame = function(){
-  oldEnd();
-  let text = document.getElementById("scoreText").innerText;
-  document.getElementById("scoreText").innerText =
-    text + "\nOpponent: " + enemyScore;
-}
-try {
-
-let mode="", level="";
-let score=0, current=0;
-let timer, time=10;
-
-const data={
-easy:[
-{q:"2+2",a:"4",o:["3","4","5"]},
-{q:"3+5",a:"8",o:["6","8","9"]}
-],
-medium:[
-{q:"5×5",a:"25",o:["20","25","30"]},
-{q:"12/3",a:"4",o:["3","4","6"]}
-],
-hard:[
-{q:"√144",a:"12",o:["10","12","14"]},
-{q:"9²",a:"81",o:["72","81","90"]}
-],
-einstein:[
-{q:"Derivative x²",a:"2x",o:["x","2x","x2"]},
-{q:"Speed of light (km/s)",a:"300000",o:["150000","300000","450000"]}
-]
-};
-
-function show(s){
-  document.querySelectorAll(".screen").forEach(e=>e.classList.remove("active"));
-  document.getElementById(s).classList.add("active");
-}
-
-window.modeSelect=function(m){
-  mode=m;
-  show("level");
-}
-
-window.startGame=function(l){
-  level=l;
-  score=0;
-  current=0;
-  show("game");
-  load();
-}
-
-function load(){
-  let arr=data[level];
-  if(current>=arr.length){
-    end();
+function loadQuestion(){
+  if(current >= questions.length){
+    endGame();
     return;
   }
 
-  let q=arr[current];
-  document.getElementById("question").innerText=q.q;
+  let q = questions[current];
+  document.getElementById("question").innerText = q.q;
 
-  let ans=document.getElementById("answers");
-  ans.innerHTML="";
+  let ansDiv = document.getElementById("answers");
+  ansDiv.innerHTML = "";
 
-  if(mode==="mcq"){
-    document.getElementById("input").style.display="none";
+  if(mode === "mcq"){
+    document.getElementById("inputAnswer").style.display = "none";
+
     q.o.forEach(opt=>{
-      let b=document.createElement("button");
-      b.innerText=opt;
-      b.onclick=function(){check(opt);};
-      ans.appendChild(b);
+      let btn = document.createElement("button");
+      btn.innerText = opt;
+      btn.onclick = function(){ check(opt); };
+      ansDiv.appendChild(btn);
     });
+
   } else {
-    document.getElementById("input").style.display="block";
+    document.getElementById("inputAnswer").style.display = "block";
   }
 
   startTimer();
 }
 
 function startTimer(){
-  time=10;
-  document.getElementById("timer").innerText=time;
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
 
   clearInterval(timer);
-  timer=setInterval(()=>{
-    time--;
-    document.getElementById("timer").innerText=time;
+  timer = setInterval(()=>{
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
 
-    if(time<=0){
-      clearInterval(timer);
+    if(timeLeft <= 0){
+      enemyMove();
       current++;
-      load();
+      loadQuestion();
     }
   },1000);
 }
 
-function check(a){
-  if(a.toLowerCase()===data[level][current].a){
-    score++;
+function enemyMove(){
+  if(Math.random() > 0.5){
+    enemyScore++;
   }
-  clearInterval(timer);
-  current++;
-  load();
 }
 
-window.submitAnswer=function(){
-  let val=document.getElementById("input").value.toLowerCase();
-
-  if(val===data[level][current].a){
+function check(ans){
+  if(ans === questions[current].a){
     score++;
   }
 
-  clearInterval(timer);
+  enemyMove();
   current++;
-  load();
+  loadQuestion();
 }
 
-function end(){
-  show("result");
+function submitAnswer(){
+  let val = document.getElementById("inputAnswer").value;
 
-  let iq=90+score*15;
-  let rank="Beginner";
-
-  if(iq>140) rank="Einstein 🧠";
-  else if(iq>120) rank="Genius";
-  else if(iq>100) rank="Smart";
-
-  document.getElementById("resultText").innerText=
-    "Score: "+score+" | IQ: "+iq+" | "+rank;
-
-  let fake=[
-    "Ali - 140",
-    "Sara - 130",
-    "You - "+iq
-  ];
-
-  document.getElementById("leaderboard").innerText=
-    "Leaderboard:\n"+fake.join("\n");
-}
-
-window.start1v1=function(){
-  alert("⚔️ 1v1 Mode: You vs AI coming next upgrade");
-}
-
-window.miniGame=function(){
-  let num=Math.floor(Math.random()*10);
-  let guess=prompt("Memory Game: remember this number "+num+" and type it again");
-
-  if(guess==num){
-    alert("Correct 🧠");
-  } else {
-    alert("Wrong ❌ It was "+num);
-  }
-}
-
-} catch(e){
-  document.body.innerHTML="<h1>Error: "+e.message+"</h1>";
-}
-</script
-  let enemyScore = 0;
-let is1v1 = false;
-
-function start1v1(){
-  enemyScore = 0;
-  score = 0;
-  current = 0;
-  is1v1 = true;
-
-  alert("Opponent found 🤖");
-
-  startGame('mcq');
-}
-
-const oldCheck = check;
-check = function(ans){
-  if(is1v1 && Math.random() > 0.5){
-    enemyScore++;
-  }
-  oldCheck(ans);
-}
-
-const oldSubmit = submitAnswer;
-submitAnswer = function(){
-  if(is1v1 && Math.random() > 0.5){
-    enemyScore++;
-  }
-  oldSubmit();
-}
-
-const oldEnd = endGame;
-endGame = function(){
-  oldEnd();
-
-  if(is1v1){
-    let result = "";
-    if(score > enemyScore) result = "You Win 🏆";
-    else if(score < enemyScore) result = "You Lose 😢";
-    else result = "Draw 🤝";
-
-    document.getElementById("scoreText").innerText +=
-      "\nOpponent: " + enemyScore + "\n" + result;
+  if(val.toLowerCase() === questions[current].a.toLowerCase()){
+    score++;
   }
 
-  is1v1 = false;
+  enemyMove();
+  current++;
+  loadQuestion();
 }
+
+function endGame(){
+  clearInterval(timer);
+
+  document.getElementById("game").classList.remove("active");
+  document.getElementById("result").classList.add("active");
+
+  let result = "";
+  if(score > enemyScore) result = "You Win 🏆";
+  else if(score < enemyScore) result = "You Lose 😢";
+  else result = "Draw 🤝";
+
+  let iq = 90 + score * 10;
+
+  document.getElementById("scoreText").innerText =
+    "IQ: " + iq +
+    "\nYou: " + score +
+    " | Opponent: " + enemyScore +
+    "\n" + result;
+}
+</script>
+
 </body>
 </html>
