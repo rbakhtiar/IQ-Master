@@ -1,49 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="manifest" href="./manifest.json">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>IQ Master</title>
-
-<link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#020617">  
-
+<link rel="manifest" href="manifest.json">
 
 <style>
-body {
+body{
   margin:0;
   font-family:Arial;
   text-align:center;
   color:white;
-  background: linear-gradient(135deg,#020617,#0ea5e9);
+  background: linear-gradient(135deg,#020617,#0ea5e9,#9333ea);
 }
-
-h1 { margin-top:20px; }
-
-button {
-  padding:15px;
-  margin:10px;
+h1{margin:15px;}
+button{
+  padding:12px;
+  margin:8px;
   border:none;
-  border-radius:10px;
-  background:#0ea5e9;
-  color:white;
+  border-radius:12px;
   width:80%;
   font-size:16px;
+  background:#0ea5e9;
+  color:white;
 }
-
-.screen { display:none; }
-.active { display:block; }
-
-#timer {
-  font-size:20px;
+.screen{display:none;}
+.active{display:block;}
+#timer{font-size:18px;margin:10px;}
+.card{
+  background:rgba(255,255,255,0.1);
   margin:10px;
+  padding:10px;
+  border-radius:12px;
 }
-
-input {
+input{
   padding:10px;
   width:70%;
   border-radius:8px;
   border:none;
+}
+
+/* Popup */
+#popup{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%) scale(0);
+  padding: 20px 30px;
+  border-radius: 12px;
+  font-size: 18px;
+  color:white;
+  font-weight:bold;
+  z-index:999;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity:0;
+  text-align:center;
+  box-shadow:0 0 15px rgba(0,0,0,0.5);
+}
+#popup.correct{background: #16a34a;}
+#popup.wrong{background: #dc2626;}
+#popup.show{
+  transform: translate(-50%,-50%) scale(1.2);
+  opacity:1;
+  animation: bounce 0.5s ease forwards;
+}
+@keyframes bounce{
+  0%{ transform: translate(-50%,-50%) scale(0); }
+  60%{ transform: translate(-50%,-50%) scale(1.3); }
+  100%{ transform: translate(-50%,-50%) scale(1); }
 }
 </style>
 </head>
@@ -52,132 +76,184 @@ input {
 
 <h1>🧠 IQ Master</h1>
 
+<!-- MENU -->
 <div id="menu" class="screen active">
-  <button onclick="startGame('mcq')">MCQ Mode</button>
-  <button onclick="startGame('typing')">Typing Mode</button>
+  <button onclick="start('mcq')">MCQ Mode</button>
+  <button onclick="start('typing')">Typing Mode</button>
+  <button onclick="start('infinite')">Infinite Mode</button>
+  <button onclick="start('ai')">1v1 AI Battle</button>
+
+  <div class="card">
+    Class:
+    <select id="class">
+      <option>1</option><option>2</option><option>3</option>
+      <option>4</option><option>5</option><option>6</option>
+      <option>7</option><option>8</option><option>9</option><option>10</option>
+    </select>
+
+    Difficulty:
+    <select id="diff">
+      <option>Super Easy</option>
+      <option>Easy</option>
+      <option>Medium</option>
+      <option>Hard</option>
+      <option>Einstein</option>
+    </select>
+  </div>
+
+  <button onclick="showLeaderboard()">Leaderboard</button>
 </div>
 
+<!-- GAME -->
 <div id="game" class="screen">
   <div id="timer">10</div>
-  <h2 id="question"></h2>
-  <div id="answers"></div>
-  <input id="inputAnswer" placeholder="Type answer..." style="display:none">
-  <br>
-  <button onclick="submitAnswer()">Submit</button>
+  <h3 id="modeText"></h3>
+  <h2 id="q"></h2>
+  <div id="ans"></div>
+  <input id="input" placeholder="Type..." style="display:none">
+  <button onclick="submit()">Submit</button>
 </div>
 
+<!-- RESULT -->
 <div id="result" class="screen">
-  <h2 id="scoreText"></h2>
+  <h2 id="res"></h2>
   <button onclick="location.reload()">Play Again</button>
 </div>
 
+<!-- LEADERBOARD -->
+<div id="leader" class="screen">
+  <h2>🏆 Leaderboard</h2>
+  <div id="board"></div>
+  <button onclick="back()">Back</button>
+</div>
+
+<!-- PRO POPUP -->
+<div id="popup"></div>
+
 <script>
-try {
-
-let mode = "mcq";
-let score = 0;
-let current = 0;
-let timer;
-let timeLeft = 10;
-
-const questions = [
-  {q:"2+2=?", a:"4", o:["3","4","5"]},
-  {q:"5×3=?", a:"15", o:["10","15","20"]},
-  {q:"Capital of France?", a:"Paris", o:["Rome","Paris","Berlin"]},
-  {q:"10/2=?", a:"5", o:["2","5","8"]}
+// Question bank (expandable)
+const qbank=[
+  {q:"2+2=?",a:"4",o:["3","4","5"]},
+  {q:"5x6=?",a:"30",o:["25","30","35"]},
+  {q:"Sun is a?",a:"Star",o:["Planet","Star","Moon"]},
+  {q:"10/2=?",a:"5",o:["2","5","8"]},
+  {q:"7+8=?",a:"15",o:["14","15","16"]},
+  {q:"Capital of UK?",a:"London",o:["Paris","London","Rome"]}
 ];
 
-window.startGame = function(m){
-  mode = m;
+let mode,score=0,current=0,timer,time=10,aiScore=0;
+
+// popup animation
+let style=document.createElement('style');
+style.innerHTML=`@keyframes shake{
+  0% { transform: translate(-50%,-50%) translateX(0); }
+  25% { transform: translate(-50%,-50%) translateX(-8px); }
+  50% { transform: translate(-50%,-50%) translateX(8px); }
+  75% { transform: translate(-50%,-50%) translateX(-8px); }
+  100% { transform: translate(-50%,-50%) translateX(0); }
+}`;
+document.head.appendChild(style);
+
+function randQ(){ return qbank[Math.floor(Math.random()*qbank.length)]; }
+
+function start(m){
+  mode=m; score=0; current=0; aiScore=0;
   document.getElementById("menu").classList.remove("active");
   document.getElementById("game").classList.add("active");
-  loadQuestion();
+  document.getElementById("modeText").innerText=
+    m.toUpperCase()+" | Class "+document.getElementById("class").value+
+    " | "+document.getElementById("diff").value;
+  next();
 }
 
-function loadQuestion(){
-  if(current >= questions.length){
-    endGame();
-    return;
-  }
-
-  let q = questions[current];
-  document.getElementById("question").innerText = q.q;
-
-  let ansDiv = document.getElementById("answers");
-  ansDiv.innerHTML = "";
-
-  if(mode === "mcq"){
-    document.getElementById("inputAnswer").style.display = "none";
-
-    q.o.forEach(opt=>{
-      let btn = document.createElement("button");
-      btn.innerText = opt;
-      btn.onclick = function(){ check(opt); };
-      ansDiv.appendChild(btn);
+function next(){
+  let qd=randQ(); window.cur=qd;
+  document.getElementById("q").innerText=qd.q;
+  let div=document.getElementById("ans"); div.innerHTML="";
+  if(mode==="typing"){ document.getElementById("input").style.display="block"; }
+  else{
+    document.getElementById("input").style.display="none";
+    qd.o.forEach(o=>{
+      let b=document.createElement("button");
+      b.innerText=o;
+      b.onclick=()=>check(o);
+      div.appendChild(b);
     });
-
-  } else {
-    document.getElementById("inputAnswer").style.display = "block";
   }
-
   startTimer();
 }
 
 function startTimer(){
-  timeLeft = 10;
-  document.getElementById("timer").innerText = timeLeft;
-
+  time=10;
+  document.getElementById("timer").innerText=time;
   clearInterval(timer);
-  timer = setInterval(()=>{
-    timeLeft--;
-    document.getElementById("timer").innerText = timeLeft;
-
-    if(timeLeft <= 0){
-      current++;
-      loadQuestion();
-    }
+  timer=setInterval(()=>{
+    time--;
+    document.getElementById("timer").innerText=time;
+    if(time<=0){ if(mode==="ai") aiScore++; proceed(); }
   },1000);
 }
 
-function check(ans){
-  if(ans === questions[current].a){
-    score++;
-  }
-  current++;
-  loadQuestion();
+function showPopup(msg,type){
+  let p=document.getElementById("popup");
+  p.innerText=msg;
+  p.className=type+" show";
+  if(type==="wrong"){ p.style.animation="bounce 0.5s ease, shake 0.5s ease"; }
+  else{ p.style.animation="bounce 0.5s ease"; }
+  setTimeout(()=>{ p.className=type; p.style.animation=""; },2000);
 }
 
-window.submitAnswer = function(){
-  let val = document.getElementById("inputAnswer").value;
-
-  if(val.toLowerCase() === questions[current].a.toLowerCase()){
-    score++;
-  }
-
-  current++;
-  loadQuestion();
+function check(a){
+  if(a===cur.a){ score++; showPopup("✅ Correct!","correct"); proceed(); }
+  else{ if(mode==="ai") aiScore++; showPopup("❌ Wrong! Correct: "+cur.a,"wrong"); proceed(); }
 }
 
-function endGame(){
+function submit(){
+  let val=document.getElementById("input").value;
+  if(val.toLowerCase()===cur.a.toLowerCase()){ score++; showPopup("✅ Correct!","correct"); proceed(); }
+  else{ if(mode==="ai") aiScore++; showPopup("❌ Wrong! Correct: "+cur.a,"wrong"); proceed(); }
+}
+
+function proceed(){
+  current++;
+  if(mode==="infinite"){ next(); }
+  else if(current>=5){ end(); }
+  else{ next(); }
+}
+
+function end(){
   clearInterval(timer);
-
   document.getElementById("game").classList.remove("active");
   document.getElementById("result").classList.add("active");
-
-  let iq = 90 + score * 10;
-
-  document.getElementById("scoreText").innerText =
-    "Score: " + score + " | IQ: " + iq;
+  let iq=90+score*10;
+  let txt="Score: "+score+" | IQ: "+iq;
+  if(mode==="ai"){ txt+=" | AI: "+aiScore; txt+=score>aiScore?" 🏆 YOU WIN":" 🤖 AI WINS"; }
+  document.getElementById("res").innerText=txt;
+  saveScore(score);
 }
 
-} catch(e) {
-  document.body.innerHTML = "<h1>Error: "+e.message+"</h1>";
+function saveScore(s){
+  let arr=JSON.parse(localStorage.getItem("iq"))||[];
+  arr.push(s);
+  arr.sort((a,b)=>b-a);
+  arr=arr.slice(0,5);
+  localStorage.setItem("iq",JSON.stringify(arr));
+}
+
+function showLeaderboard(){
+  document.getElementById("menu").classList.remove("active");
+  document.getElementById("leader").classList.add("active");
+  let arr=JSON.parse(localStorage.getItem("iq"))||[];
+  let html="";
+  arr.forEach((s,i)=>{ html+="<div class='card'>#"+(i+1)+" - "+s+"</div>"; });
+  document.getElementById("board").innerHTML=html||"No scores yet";
+}
+
+function back(){
+  document.getElementById("leader").classList.remove("active");
+  document.getElementById("menu").classList.add("active");
 }
 </script>
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js');
-}
-</script>
+
 </body>
 </html>
