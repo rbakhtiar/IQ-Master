@@ -16,29 +16,23 @@
 
         body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #0a0f2a, #020617, #1e1b4b);
-            background-size: 200% 200%;
-            animation: gradientFlow 10s ease infinite;
-            font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a0f2a 0%, #020617 50%, #1e1b4b 100%);
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
 
-        @keyframes gradientFlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
         .app-container {
             max-width: 700px;
             width: 100%;
-            background: rgba(10, 20, 40, 0.85);
+            background: #0f172ad9;
             border-radius: 72px;
-            border: 1px solid rgba(56, 189, 248, 0.4);
-            box-shadow: 0 25px 45px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1);
+            border: 1px solid rgba(56, 189, 248, 0.5);
+            box-shadow: 0 25px 40px rgba(0,0,0,0.4);
             padding: 28px 24px 36px;
             transition: transform 0.2s ease;
         }
@@ -88,6 +82,7 @@
             transition: all 0.2s;
             margin: 6px 8px;
             outline: none;
+            font-family: inherit;
         }
         select:hover, button:hover, input:hover {
             border-color: #f0abfc;
@@ -127,16 +122,16 @@
         }
 
         .question-card {
-            background: linear-gradient(125deg, #0a0f1e, #030614);
+            background: #0a0f1e;
             border-radius: 56px;
             padding: 32px 16px;
             text-align: center;
-            font-size: 1.8rem;
+            font-size: 1.9rem;
             font-weight: bold;
             margin: 20px 0;
             color: white;
-            border: 1px solid rgba(56,189,248,0.4);
-            box-shadow: inset 0 1px 4px #ffffff1a, 0 10px 20px black;
+            border: 1px solid rgba(56,189,248,0.5);
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.1), 0 10px 20px rgba(0,0,0,0.3);
         }
 
         .answers-grid {
@@ -209,7 +204,6 @@
 <div class="app-container">
     <h1>🧠 IQ MASTER</h1>
 
-    <!-- MENU -->
     <div id="menuScreen" class="screen active">
         <div class="card">
             <div>📚 Class: 
@@ -233,7 +227,6 @@
         <button onclick="leaderboard.show()">🏆 Leaderboard</button>
     </div>
 
-    <!-- GAME -->
     <div id="gameScreen" class="screen">
         <div class="game-header">
             <span>⭐ <span id="gameScore">0</span></span>
@@ -250,7 +243,6 @@
         <div id="qCounter" style="margin-top: 18px; text-align: center; background: #00000033; border-radius: 40px; padding: 8px;"></div>
     </div>
 
-    <!-- RESULT -->
     <div id="resultScreen" class="screen">
         <h2>📊 GAME OVER</h2>
         <div id="resultMsg" style="font-size: 1.5rem; margin: 20px; text-align: center;"></div>
@@ -258,7 +250,6 @@
         <button onclick="leaderboard.show()">🏆 LEADERBOARD</button>
     </div>
 
-    <!-- LEADERBOARD -->
     <div id="leaderboardScreen" class="screen">
         <h2>🏅 TOP SCORES</h2>
         <div id="leaderList"></div>
@@ -269,9 +260,7 @@
 </div>
 
 <script>
-    // ---------- MASTER QUESTION BANK (with real distractors) ----------
     const QUESTION_BANK = [
-        // MATH
         { text: "5 + 3 = ?", answer: "8", classMin: 1, classMax: 3, difficulty: "Super Easy", distractors: ["6", "7", "9"] },
         { text: "12 - 7 = ?", answer: "5", classMin: 1, classMax: 3, difficulty: "Super Easy", distractors: ["4", "6", "7"] },
         { text: "4 × 6 = ?", answer: "24", classMin: 3, classMax: 5, difficulty: "Easy", distractors: ["20", "22", "26"] },
@@ -282,24 +271,20 @@
         { text: "2³ × 3² = ?", answer: "72", classMin: 7, classMax: 9, difficulty: "Hard", distractors: ["64", "68", "80"] },
         { text: "If 3x = 27, x = ?", answer: "9", classMin: 7, classMax: 9, difficulty: "Hard", distractors: ["7", "8", "10"] },
         { text: "Derivative of x²?", answer: "2x", classMin: 9, classMax: 10, difficulty: "Einstein", distractors: ["x", "2", "x²"] },
-        // GK
         { text: "Capital of France?", answer: "Paris", classMin: 2, classMax: 10, difficulty: "Easy", distractors: ["London", "Berlin", "Madrid"] },
         { text: "Largest mammal?", answer: "Whale", classMin: 2, classMax: 10, difficulty: "Super Easy", distractors: ["Elephant", "Giraffe", "Hippo"] },
         { text: "Who painted Mona Lisa?", answer: "Da Vinci", classMin: 5, classMax: 10, difficulty: "Medium", distractors: ["Van Gogh", "Picasso", "Rembrandt"] },
         { text: "Longest river?", answer: "Nile", classMin: 5, classMax: 10, difficulty: "Medium", distractors: ["Amazon", "Yangtze", "Mississippi"] },
         { text: "Statue of Liberty gift from?", answer: "France", classMin: 6, classMax: 10, difficulty: "Hard", distractors: ["England", "Spain", "Germany"] },
-        // Science
         { text: "Gas plants release?", answer: "Oxygen", classMin: 3, classMax: 10, difficulty: "Easy", distractors: ["CO2", "Nitrogen", "Hydrogen"] },
         { text: "Hardest natural substance?", answer: "Diamond", classMin: 4, classMax: 10, difficulty: "Easy", distractors: ["Gold", "Iron", "Platinum"] },
         { text: "pH of pure water?", answer: "7", classMin: 6, classMax: 10, difficulty: "Medium", distractors: ["5", "6", "8"] },
         { text: "Pumps blood?", answer: "Heart", classMin: 3, classMax: 10, difficulty: "Super Easy", distractors: ["Liver", "Brain", "Lungs"] },
         { text: "Symbol for Gold?", answer: "Au", classMin: 6, classMax: 10, difficulty: "Hard", distractors: ["Ag", "Fe", "Pb"] },
-        // Logic
         { text: "Has keys but no locks?", answer: "Piano", classMin: 2, classMax: 10, difficulty: "Medium", distractors: ["Keyboard", "Door", "Chest"] },
         { text: "Speaks without mouth?", answer: "Echo", classMin: 4, classMax: 10, difficulty: "Hard", distractors: ["Shadow", "Wind", "Mirror"] }
     ];
 
-    // Dynamic math generator (for variety)
     function generateMathQuestion(classLevel, difficulty) {
         let low = 1, high = 20, ops = ['+'];
         if (classLevel >= 7) high = 150;
@@ -348,7 +333,6 @@
         );
     }
 
-    // ---------- GAME ENGINE ----------
     const game = {
         mode: null,
         classLevel: 5,
