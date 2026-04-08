@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#020617">
-    <meta name="description" content="IQ Master - Brain Training Game: Math, GK, AI Battle, Leaderboard">
     <title>IQ Master • Brain Training</title>
     <link rel="manifest" href="manifest.json">
     <style>
@@ -17,66 +16,65 @@
 
         body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #0a0f2a 0%, #020617 40%, #0f172a 100%);
-            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0f2a, #020617, #1e1b4b);
+            background-size: 200% 200%;
+            animation: gradientFlow 8s ease infinite;
+            font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            animation: bgPulse 12s ease infinite alternate;
         }
 
-        @keyframes bgPulse {
-            0% { background: linear-gradient(135deg, #0a0f2a, #020617, #0f172a); }
-            100% { background: linear-gradient(225deg, #0b1120, #0a0f2a, #1e1b4b); }
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        .game-container {
+        .app-container {
             max-width: 700px;
             width: 100%;
-            background: rgba(10, 20, 40, 0.45);
-            backdrop-filter: blur(20px);
-            border-radius: 80px;
-            border: 1px solid rgba(56, 189, 248, 0.35);
-            box-shadow: 0 30px 50px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.08);
+            background: rgba(10, 20, 40, 0.5);
+            backdrop-filter: blur(16px);
+            border-radius: 72px;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1);
             padding: 28px 24px 36px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.2s ease;
         }
-        .game-container:hover {
+        .app-container:hover {
             transform: scale(1.01);
-            box-shadow: 0 35px 55px rgba(0,0,0,0.7);
         }
 
         h1 {
-            font-size: 2.3rem;
-            background: linear-gradient(135deg, #ffffff, #a5f3fc, #c084fc, #f9a8d4);
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #fff, #a5f3fc, #c084fc);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             text-align: center;
             letter-spacing: -0.5px;
-            margin-bottom: 6px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+            margin-bottom: 8px;
         }
 
         .screen {
             display: none;
-            animation: floatFade 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            animation: fadeSlide 0.3s ease-out;
         }
         .active { display: block; }
 
-        @keyframes floatFade {
-            0% { opacity: 0; transform: translateY(20px) scale(0.98); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .card {
-            background: rgba(255,255,255,0.04);
-            border-radius: 56px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 48px;
             padding: 20px;
             margin: 20px 0;
             border: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(4px);
         }
 
         select, button, input {
@@ -88,7 +86,7 @@
             font-weight: 500;
             color: white;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s;
             margin: 6px 8px;
             outline: none;
         }
@@ -101,7 +99,7 @@
         button {
             background: linear-gradient(105deg, #0c4e6e, #0284c7);
             border: none;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
         .grid-buttons {
@@ -123,26 +121,23 @@
             justify-content: space-between;
             background: #00000066;
             border-radius: 80px;
-            padding: 12px 24px;
+            padding: 12px 20px;
             margin-bottom: 20px;
             font-weight: bold;
             font-size: 1.2rem;
-            backdrop-filter: blur(8px);
         }
 
         .question-card {
-            background: linear-gradient(125deg, #0a0f1edd, #030614dd);
-            border-radius: 60px;
-            padding: 36px 16px;
+            background: linear-gradient(125deg, #0a0f1e, #030614);
+            border-radius: 56px;
+            padding: 32px 16px;
             text-align: center;
-            font-size: 1.9rem;
+            font-size: 1.8rem;
             font-weight: bold;
             margin: 20px 0;
-            word-break: break-word;
-            box-shadow: inset 0 1px 4px #ffffff1a, 0 15px 30px black;
-            border: 1px solid rgba(56,189,248,0.4);
             color: white;
-            text-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            border: 1px solid rgba(56,189,248,0.4);
+            box-shadow: inset 0 1px 4px #ffffff1a, 0 10px 20px black;
         }
 
         .answers-grid {
@@ -156,7 +151,6 @@
             flex: 1 1 42%;
             font-size: 1.2rem;
             background: #0f212e;
-            transition: all 0.15s;
         }
         .answers-grid button:hover {
             background: #1e3a4a;
@@ -167,8 +161,6 @@
             width: 85%;
             text-align: center;
             font-size: 1.2rem;
-            background: #0f172a;
-            color: white;
         }
 
         #popup {
@@ -179,7 +171,7 @@
             background: #1e293b;
             padding: 16px 32px;
             border-radius: 80px;
-            font-size: 1.7rem;
+            font-size: 1.6rem;
             font-weight: bold;
             color: white;
             z-index: 1000;
@@ -190,7 +182,7 @@
             pointer-events: none;
             white-space: nowrap;
         }
-        #popup.correct { background: #10b981; text-shadow: 0 0 3px #059669; }
+        #popup.correct { background: #10b981; }
         #popup.wrong { background: #ef4444; }
         #popup.show { transform: translate(-50%, -50%) scale(1); opacity: 1; animation: bouncePop 0.4s ease; }
         @keyframes bouncePop {
@@ -207,11 +199,6 @@
             display: flex;
             justify-content: space-between;
             border-left: 6px solid gold;
-            transition: 0.1s;
-        }
-        .leaderboard-entry:hover {
-            background: #1e293b;
-            transform: translateX(5px);
         }
         .quit-btn {
             background: #4c1d95cc;
@@ -221,14 +208,15 @@
             font-size: 0.7rem;
             text-align: center;
             margin-top: 25px;
-            opacity: 0.5;
+            opacity: 0.6;
         }
     </style>
 </head>
 <body>
-<div class="game-container">
+<div class="app-container">
     <h1>🧠 IQ MASTER</h1>
 
+    <!-- MENU -->
     <div id="menuScreen" class="screen active">
         <div class="card">
             <div>📚 Class: 
@@ -250,9 +238,10 @@
             <button onclick="game.start('ai')">🤖 1v1 AI Battle</button>
         </div>
         <button onclick="leaderboard.show()">🏆 Leaderboard</button>
-        <footer>⚡ Install me | Offline ready</footer>
+        <footer>Installable • Offline ready</footer>
     </div>
 
+    <!-- GAME -->
     <div id="gameScreen" class="screen">
         <div class="game-header">
             <span>⭐ <span id="gameScore">0</span></span>
@@ -266,9 +255,10 @@
             <button id="submitTypingBtn">✓ SUBMIT</button>
             <button class="quit-btn" onclick="game.quit()">🏠 MENU</button>
         </div>
-        <div id="qCounter" style="margin-top: 18px; text-align: center; font-size: 0.85rem; background: #00000033; border-radius: 40px; padding: 8px;"></div>
+        <div id="qCounter" style="margin-top: 18px; text-align: center; background: #00000033; border-radius: 40px; padding: 8px;"></div>
     </div>
 
+    <!-- RESULT -->
     <div id="resultScreen" class="screen">
         <h2>📊 GAME OVER</h2>
         <div id="resultMsg" style="font-size: 1.5rem; margin: 20px; text-align: center;"></div>
@@ -276,6 +266,7 @@
         <button onclick="leaderboard.show()">🏆 LEADERBOARD</button>
     </div>
 
+    <!-- LEADERBOARD -->
     <div id="leaderboardScreen" class="screen">
         <h2>🏅 TOP SCORES</h2>
         <div id="leaderList"></div>
@@ -286,35 +277,38 @@
 </div>
 
 <script>
-    // ---------- MASTER QUESTION BANK (with plausible distractors for MCQ) ----------
-    const masterQuestions = [
-        { text: "5 + 3 = ?", answer: "8", topic: "math", minClass: 1, maxClass: 3, difficulty: "Super Easy", distractors: ["6", "7", "9"] },
-        { text: "12 - 7 = ?", answer: "5", topic: "math", minClass: 1, maxClass: 3, difficulty: "Super Easy", distractors: ["4", "6", "7"] },
-        { text: "4 × 6 = ?", answer: "24", topic: "math", minClass: 3, maxClass: 5, difficulty: "Easy", distractors: ["20", "22", "26"] },
-        { text: "81 ÷ 9 = ?", answer: "9", topic: "math", minClass: 4, maxClass: 6, difficulty: "Easy", distractors: ["7", "8", "10"] },
-        { text: "15% of 200 = ?", answer: "30", topic: "math", minClass: 6, maxClass: 8, difficulty: "Medium", distractors: ["25", "28", "35"] },
-        { text: "x + 7 = 15, x = ?", answer: "8", topic: "math", minClass: 6, maxClass: 8, difficulty: "Medium", distractors: ["6", "7", "9"] },
-        { text: "√144 = ?", answer: "12", topic: "math", minClass: 5, maxClass: 7, difficulty: "Medium", distractors: ["10", "11", "13"] },
-        { text: "2³ × 3² = ?", answer: "72", topic: "math", minClass: 7, maxClass: 9, difficulty: "Hard", distractors: ["64", "68", "80"] },
-        { text: "If 3x = 27, x = ?", answer: "9", topic: "math", minClass: 7, maxClass: 9, difficulty: "Hard", distractors: ["7", "8", "10"] },
-        { text: "What is the derivative of x²?", answer: "2x", topic: "math", minClass: 9, maxClass: 10, difficulty: "Einstein", distractors: ["x", "2", "x²"] },
-        { text: "Who wrote the Indian national anthem?", answer: "Tagore", topic: "gk", minClass: 3, maxClass: 10, difficulty: "Easy", distractors: ["Premchand", "Gandhi", "Nehru"] },
-        { text: "Which planet is known as the Morning Star?", answer: "Venus", topic: "gk", minClass: 4, maxClass: 10, difficulty: "Easy", distractors: ["Mars", "Jupiter", "Mercury"] },
-        { text: "Who painted the Mona Lisa?", answer: "Da Vinci", topic: "gk", minClass: 5, maxClass: 10, difficulty: "Medium", distractors: ["Van Gogh", "Picasso", "Rembrandt"] },
-        { text: "What is the longest river in the world?", answer: "Nile", topic: "gk", minClass: 5, maxClass: 10, difficulty: "Medium", distractors: ["Amazon", "Yangtze", "Mississippi"] },
-        { text: "Which country gifted the Statue of Liberty to the USA?", answer: "France", topic: "gk", minClass: 6, maxClass: 10, difficulty: "Hard", distractors: ["England", "Spain", "Germany"] },
-        { text: "What gas do plants release during photosynthesis?", answer: "Oxygen", topic: "science", minClass: 3, maxClass: 10, difficulty: "Easy", distractors: ["Carbon dioxide", "Nitrogen", "Hydrogen"] },
-        { text: "What is the hardest natural substance?", answer: "Diamond", topic: "science", minClass: 4, maxClass: 10, difficulty: "Easy", distractors: ["Gold", "Iron", "Platinum"] },
-        { text: "What is the pH of pure water?", answer: "7", topic: "science", minClass: 6, maxClass: 10, difficulty: "Medium", distractors: ["5", "6", "8"] },
-        { text: "Which organ pumps blood in the human body?", answer: "Heart", topic: "science", minClass: 3, maxClass: 10, difficulty: "Super Easy", distractors: ["Liver", "Brain", "Lungs"] },
-        { text: "What is the chemical symbol for Gold?", answer: "Au", topic: "science", minClass: 6, maxClass: 10, difficulty: "Hard", distractors: ["Ag", "Fe", "Pb"] },
-        { text: "What has keys but can't open locks?", answer: "Piano", topic: "logic", minClass: 2, maxClass: 10, difficulty: "Medium", distractors: ["Keyboard", "Door", "Chest"] },
-        { text: "I speak without a mouth and hear without ears. Who am I?", answer: "Echo", topic: "logic", minClass: 4, maxClass: 10, difficulty: "Hard", distractors: ["Shadow", "Wind", "Mirror"] },
-        { text: "What is the largest mammal on Earth?", answer: "Whale", topic: "gk", minClass: 2, maxClass: 10, difficulty: "Super Easy", distractors: ["Elephant", "Giraffe", "Hippo"] }
+    // ---------- MASTER QUESTION BANK (with real distractors) ----------
+    const QUESTION_BANK = [
+        // MATH
+        { text: "5 + 3 = ?", answer: "8", classMin: 1, classMax: 3, difficulty: "Super Easy", distractors: ["6", "7", "9"] },
+        { text: "12 - 7 = ?", answer: "5", classMin: 1, classMax: 3, difficulty: "Super Easy", distractors: ["4", "6", "7"] },
+        { text: "4 × 6 = ?", answer: "24", classMin: 3, classMax: 5, difficulty: "Easy", distractors: ["20", "22", "26"] },
+        { text: "81 ÷ 9 = ?", answer: "9", classMin: 4, classMax: 6, difficulty: "Easy", distractors: ["7", "8", "10"] },
+        { text: "15% of 200 = ?", answer: "30", classMin: 6, classMax: 8, difficulty: "Medium", distractors: ["25", "28", "35"] },
+        { text: "x + 7 = 15, x = ?", answer: "8", classMin: 6, classMax: 8, difficulty: "Medium", distractors: ["6", "7", "9"] },
+        { text: "√144 = ?", answer: "12", classMin: 5, classMax: 7, difficulty: "Medium", distractors: ["10", "11", "13"] },
+        { text: "2³ × 3² = ?", answer: "72", classMin: 7, classMax: 9, difficulty: "Hard", distractors: ["64", "68", "80"] },
+        { text: "If 3x = 27, x = ?", answer: "9", classMin: 7, classMax: 9, difficulty: "Hard", distractors: ["7", "8", "10"] },
+        { text: "Derivative of x²?", answer: "2x", classMin: 9, classMax: 10, difficulty: "Einstein", distractors: ["x", "2", "x²"] },
+        // GK
+        { text: "Capital of France?", answer: "Paris", classMin: 2, classMax: 10, difficulty: "Easy", distractors: ["London", "Berlin", "Madrid"] },
+        { text: "Largest mammal?", answer: "Whale", classMin: 2, classMax: 10, difficulty: "Super Easy", distractors: ["Elephant", "Giraffe", "Hippo"] },
+        { text: "Who painted Mona Lisa?", answer: "Da Vinci", classMin: 5, classMax: 10, difficulty: "Medium", distractors: ["Van Gogh", "Picasso", "Rembrandt"] },
+        { text: "Longest river?", answer: "Nile", classMin: 5, classMax: 10, difficulty: "Medium", distractors: ["Amazon", "Yangtze", "Mississippi"] },
+        { text: "Statue of Liberty gift from?", answer: "France", classMin: 6, classMax: 10, difficulty: "Hard", distractors: ["England", "Spain", "Germany"] },
+        // Science
+        { text: "Gas plants release?", answer: "Oxygen", classMin: 3, classMax: 10, difficulty: "Easy", distractors: ["CO2", "Nitrogen", "Hydrogen"] },
+        { text: "Hardest natural substance?", answer: "Diamond", classMin: 4, classMax: 10, difficulty: "Easy", distractors: ["Gold", "Iron", "Platinum"] },
+        { text: "pH of pure water?", answer: "7", classMin: 6, classMax: 10, difficulty: "Medium", distractors: ["5", "6", "8"] },
+        { text: "Pumps blood?", answer: "Heart", classMin: 3, classMax: 10, difficulty: "Super Easy", distractors: ["Liver", "Brain", "Lungs"] },
+        { text: "Symbol for Gold?", answer: "Au", classMin: 6, classMax: 10, difficulty: "Hard", distractors: ["Ag", "Fe", "Pb"] },
+        // Logic
+        { text: "Has keys but no locks?", answer: "Piano", classMin: 2, classMax: 10, difficulty: "Medium", distractors: ["Keyboard", "Door", "Chest"] },
+        { text: "Speaks without mouth?", answer: "Echo", classMin: 4, classMax: 10, difficulty: "Hard", distractors: ["Shadow", "Wind", "Mirror"] }
     ];
 
-    // Dynamic math question generator (used when no static question fits or for variety)
-    function generateDynamicMath(classLevel, difficulty) {
+    // Dynamic math generator (for variety)
+    function generateMathQuestion(classLevel, difficulty) {
         let low = 1, high = 20, ops = ['+'];
         if (classLevel >= 7) high = 150;
         else if (classLevel >= 5) high = 100;
@@ -328,81 +322,53 @@
         let op = ops[Math.floor(Math.random() * ops.length)];
         let a = Math.floor(Math.random() * (high - low + 1) + low);
         let b = Math.floor(Math.random() * (high/2) + 1);
-        let answer, text;
+        let text, answer;
         if (op === '^2') {
             let base = Math.floor(Math.random() * 15 + 2);
-            answer = String(base*base);
+            answer = String(base * base);
             text = `${base}² = ?`;
         } else if (op === '/') {
-            b = Math.max(1,b);
+            b = Math.max(1, b);
             let product = a * b;
             answer = String(a);
             text = `${product} ÷ ${b} = ?`;
         } else if (op === '*') {
-            answer = String(a*b);
+            answer = String(a * b);
             text = `${a} × ${b} = ?`;
         } else {
-            let result = op === '+' ? a+b : a-b;
-            if (result < 0) { let t=a; a=b; b=t; result = a-b; }
+            let result = op === '+' ? a + b : a - b;
+            if (result < 0) { let t = a; a = b; b = t; result = a - b; }
             answer = String(result);
             text = `${a} ${op} ${b} = ?`;
         }
-        // generate numeric distractors
-        let numAns = parseFloat(answer);
-        let dist1 = isNaN(numAns) ? "??" : String(numAns + (Math.random() > 0.5 ? 1 : -1));
-        let dist2 = isNaN(numAns) ? "???" : String(numAns + (Math.random() > 0.5 ? 2 : -2));
-        if (dist1 === answer) dist1 = String(numAns + 1);
-        if (dist2 === answer) dist2 = String(numAns - 1);
-        return { text, answer: answer.toLowerCase(), options: [answer, dist1, dist2] };
+        let num = parseFloat(answer);
+        let d1 = String(num + 1);
+        let d2 = String(num - 1);
+        if (d1 === answer) d1 = String(num + 2);
+        if (d2 === answer) d2 = String(num - 2);
+        return { text, answer: answer.toLowerCase(), distractors: [d1, d2] };
     }
 
-    function getFilteredStaticQuestions(classLvl, diff) {
-        return masterQuestions.filter(q => 
-            classLvl >= q.minClass && classLvl <= q.maxClass &&
-            (q.difficulty === diff || (diff === "Einstein" && q.difficulty === "Hard"))
+    function filterQuestions(classLevel, difficulty) {
+        return QUESTION_BANK.filter(q => 
+            classLevel >= q.classMin && classLevel <= q.classMax &&
+            (q.difficulty === difficulty || (difficulty === "Einstein" && q.difficulty === "Hard"))
         );
     }
 
-    // Smart option generation: use predefined distractors if available, else generate sensible ones
-    function generateOptions(questionObj, correctAnswer) {
-        if (questionObj.distractors && questionObj.distractors.length >= 2) {
-            let opts = [correctAnswer, ...questionObj.distractors.slice(0,2)];
-            opts.sort(() => Math.random() - 0.5);
-            return opts;
-        }
-        // fallback: generate based on answer type
-        let ans = correctAnswer;
-        if (!isNaN(parseFloat(ans))) {
-            let num = parseFloat(ans);
-            let d1 = String(num + 1);
-            let d2 = String(num - 1);
-            if (d1 === ans) d1 = String(num + 2);
-            if (d2 === ans) d2 = String(num - 2);
-            let opts = [ans, d1, d2];
-            opts.sort(() => Math.random() - 0.5);
-            return opts;
-        } else {
-            // generic fallback (should rarely happen now)
-            let fake = ["Alternative", "Option", "Wrong"];
-            let opts = [ans, fake[0], fake[1]];
-            opts.sort(() => Math.random() - 0.5);
-            return opts;
-        }
-    }
-
-    // GAME MANAGER
+    // ---------- GAME ENGINE ----------
     const game = {
         mode: null,
         classLevel: 5,
         difficulty: "Medium",
         score: 0,
         aiScore: 0,
-        qIndex: 0,
+        questionsDone: 0,
         totalRounds: 5,
         timer: null,
         timeLeft: 10,
         active: false,
-        currentQuestion: null,
+        currentQ: null,
         usedQuestions: new Set(),
         staticPool: [],
         
@@ -412,11 +378,11 @@
             this.difficulty = document.getElementById('difficultySelect').value;
             this.score = 0;
             this.aiScore = 0;
-            this.qIndex = 0;
+            this.questionsDone = 0;
             this.totalRounds = (mode === 'infinite') ? Infinity : 5;
             this.active = true;
             this.usedQuestions.clear();
-            this.staticPool = getFilteredStaticQuestions(this.classLevel, this.difficulty);
+            this.staticPool = filterQuestions(this.classLevel, this.difficulty);
             
             document.getElementById('gameScore').innerText = "0";
             document.getElementById('gameTimer').innerText = "10";
@@ -435,13 +401,12 @@
             this.nextQuestion();
         },
         
-        getNewQuestion() {
+        getFreshQuestion() {
             let useDynamic = (Math.random() < 0.3) || (this.staticPool.length === 0);
-            let q = null;
-            if (useDynamic || this.staticPool.length === 0) {
-                q = generateDynamicMath(this.classLevel, this.difficulty);
+            let q;
+            if (useDynamic) {
+                q = generateMathQuestion(this.classLevel, this.difficulty);
                 q.answer = q.answer.toLowerCase();
-                q.options = q.options; // already has options
             } else {
                 let available = this.staticPool.filter(qq => !this.usedQuestions.has(qq.text));
                 if (available.length === 0 && this.mode === 'infinite') {
@@ -449,40 +414,41 @@
                     available = [...this.staticPool];
                 }
                 let picked = available.length ? available[Math.floor(Math.random() * available.length)] : this.staticPool[0];
-                let correctAns = picked.answer;
-                let opts = generateOptions(picked, correctAns);
                 q = {
                     text: picked.text,
-                    answer: correctAns.toLowerCase(),
-                    options: opts,
+                    answer: picked.answer.toLowerCase(),
                     distractors: picked.distractors
                 };
                 if (this.mode === 'infinite') this.usedQuestions.add(q.text);
             }
-            // Ensure options exist for MCQ mode
-            if (this.mode === 'mcq' && !q.options) {
-                let fakeOpts = [q.answer, "alt1", "alt2"];
-                fakeOpts.sort(() => Math.random() - 0.5);
-                q.options = fakeOpts;
+            if (this.mode === 'mcq') {
+                let opts = [q.answer, ...(q.distractors || ["tmp1", "tmp2"])];
+                opts = opts.slice(0, 3);
+                for (let i = opts.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [opts[i], opts[j]] = [opts[j], opts[i]];
+                }
+                q.options = opts;
             }
             return q;
         },
         
         nextQuestion() {
             if (!this.active) return;
-            if (this.mode !== 'infinite' && this.qIndex >= this.totalRounds) {
+            if (this.mode !== 'infinite' && this.questionsDone >= this.totalRounds) {
                 this.endGame();
                 return;
             }
-            this.currentQuestion = this.getNewQuestion();
-            document.getElementById('questionText').innerText = this.currentQuestion.text;
+            this.currentQ = this.getFreshQuestion();
+            document.getElementById('questionText').innerText = this.currentQ.text;
             const container = document.getElementById('answersArea');
             const typingInp = document.getElementById('typingInput');
-            if (this.mode === 'mcq' && this.currentQuestion.options) {
+            
+            if (this.mode === 'mcq' && this.currentQ.options) {
                 container.innerHTML = '';
                 typingInp.style.display = 'none';
                 document.getElementById('submitTypingBtn').style.display = 'none';
-                this.currentQuestion.options.forEach(opt => {
+                this.currentQ.options.forEach(opt => {
                     let btn = document.createElement('button');
                     btn.innerText = opt;
                     btn.onclick = () => this.checkAnswer(opt);
@@ -501,8 +467,12 @@
                 container.innerHTML = '';
                 typingInp.style.display = 'none';
                 document.getElementById('submitTypingBtn').style.display = 'none';
-                let opts = this.currentQuestion.options || [this.currentQuestion.answer, "Wrong1", "Wrong2"];
-                opts.sort(() => Math.random() - 0.5);
+                let opts = [this.currentQ.answer, ...(this.currentQ.distractors || ["opt1", "opt2"])];
+                opts = opts.slice(0, 3);
+                for (let i = opts.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [opts[i], opts[j]] = [opts[j], opts[i]];
+                }
                 opts.forEach(opt => {
                     let btn = document.createElement('button');
                     btn.innerText = opt;
@@ -510,7 +480,7 @@
                     container.appendChild(btn);
                 });
             }
-            const counterText = (this.mode === 'infinite') ? `🔁 Round ${this.qIndex+1} (no repeats)` : `📌 Q${this.qIndex+1}/${this.totalRounds}`;
+            const counterText = (this.mode === 'infinite') ? `🔁 Round ${this.questionsDone+1} (no repeats)` : `📌 Q${this.questionsDone+1}/${this.totalRounds}`;
             document.getElementById('qCounter').innerHTML = counterText;
             this.startTimer();
         },
@@ -529,8 +499,8 @@
                         this.aiScore++;
                         document.getElementById('aiScoreVal').innerText = this.aiScore;
                     }
-                    this.showPopup(`⏰ Timeout! Answer: ${this.currentQuestion.answer}`, 'wrong');
-                    this.qIndex++;
+                    this.showPopup(`⏰ Timeout! Answer: ${this.currentQ.answer}`, 'wrong');
+                    this.questionsDone++;
                     this.updateUI();
                     this.nextQuestion();
                 }
@@ -540,7 +510,7 @@
         checkAnswer(userAns) {
             if (!this.active) return;
             clearInterval(this.timer);
-            const isCorrect = (userAns.toLowerCase().trim() === this.currentQuestion.answer);
+            const isCorrect = (userAns.toLowerCase().trim() === this.currentQ.answer);
             if (isCorrect) {
                 this.score++;
                 this.showPopup("✅ Correct!", "correct");
@@ -549,9 +519,9 @@
                     this.aiScore++;
                     document.getElementById('aiScoreVal').innerText = this.aiScore;
                 }
-                this.showPopup(`❌ Wrong! Answer: ${this.currentQuestion.answer}`, "wrong");
+                this.showPopup(`❌ Wrong! Answer: ${this.currentQ.answer}`, "wrong");
             }
-            this.qIndex++;
+            this.questionsDone++;
             this.updateUI();
             this.nextQuestion();
         },
@@ -608,7 +578,7 @@
             document.getElementById('leaderboardScreen').classList.add('active');
             const listDiv = document.getElementById('leaderList');
             let scores = JSON.parse(localStorage.getItem('iqMasterScores')) || [];
-            if (!scores.length) {
+            if (scores.length === 0) {
                 listDiv.innerHTML = '<div class="leaderboard-entry">✨ No scores yet. Play a game!</div>';
                 return;
             }
@@ -631,7 +601,7 @@
     
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').then(reg => console.log('✅ SW registered', reg)).catch(err => console.log('❌ SW fail', err));
+            navigator.serviceWorker.register('./sw.js').catch(err => console.log("SW error:", err));
         });
     }
 </script>
