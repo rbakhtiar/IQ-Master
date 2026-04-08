@@ -18,7 +18,7 @@
             min-height: 100vh;
             background: linear-gradient(135deg, #0a0f2a, #020617, #1e1b4b);
             background-size: 200% 200%;
-            animation: gradientFlow 8s ease infinite;
+            animation: gradientFlow 10s ease infinite;
             font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
             display: flex;
             justify-content: center;
@@ -35,8 +35,7 @@
         .app-container {
             max-width: 700px;
             width: 100%;
-            background: rgba(10, 20, 40, 0.5);
-            backdrop-filter: blur(16px);
+            background: rgba(10, 20, 40, 0.85);
             border-radius: 72px;
             border: 1px solid rgba(56, 189, 248, 0.4);
             box-shadow: 0 25px 45px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1);
@@ -70,11 +69,11 @@
         }
 
         .card {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.08);
             border-radius: 48px;
             padding: 20px;
             margin: 20px 0;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
         }
 
         select, button, input {
@@ -204,12 +203,6 @@
             background: #4c1d95cc;
             margin-top: 12px;
         }
-        footer {
-            font-size: 0.7rem;
-            text-align: center;
-            margin-top: 25px;
-            opacity: 0.6;
-        }
     </style>
 </head>
 <body>
@@ -238,7 +231,6 @@
             <button onclick="game.start('ai')">🤖 1v1 AI Battle</button>
         </div>
         <button onclick="leaderboard.show()">🏆 Leaderboard</button>
-        <footer>Installable • Offline ready</footer>
     </div>
 
     <!-- GAME -->
@@ -307,7 +299,7 @@
         { text: "Speaks without mouth?", answer: "Echo", classMin: 4, classMax: 10, difficulty: "Hard", distractors: ["Shadow", "Wind", "Mirror"] }
     ];
 
-    // Dynamic math generator (for variety, never repeats in infinite mode)
+    // Dynamic math generator (for variety)
     function generateMathQuestion(classLevel, difficulty) {
         let low = 1, high = 20, ops = ['+'];
         if (classLevel >= 7) high = 150;
