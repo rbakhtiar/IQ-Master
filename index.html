@@ -4,76 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#020617">
-    <meta name="description" content="IQ Master - Ultimate Brain Training PWA">
-    <title>IQ Master • Brain Training PWA</title>
+    <meta name="description" content="IQ Master - Brain Training Game: Math, GK, AI Battle, Leaderboard">
+    <title>IQ Master • Brain Training</title>
     <link rel="manifest" href="manifest.json">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             min-height: 100vh;
-            background: linear-gradient(145deg, #0a0f2a 0%, #020617 50%, #0a0f2a 100%);
+            background: linear-gradient(135deg, #0a0f2a 0%, #020617 40%, #0f172a 100%);
             font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, 'Inter', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            animation: bgPulse 12s ease infinite alternate;
         }
 
-        /* main container */
+        @keyframes bgPulse {
+            0% { background: linear-gradient(135deg, #0a0f2a, #020617, #0f172a); }
+            100% { background: linear-gradient(225deg, #0b1120, #0a0f2a, #1e1b4b); }
+        }
+
         .game-container {
             max-width: 700px;
             width: 100%;
-            background: rgba(10, 20, 40, 0.55);
-            backdrop-filter: blur(18px);
-            border-radius: 70px;
-            border: 1px solid rgba(56, 189, 248, 0.4);
-            box-shadow: 0 30px 50px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1);
+            background: rgba(10, 20, 40, 0.45);
+            backdrop-filter: blur(20px);
+            border-radius: 80px;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            box-shadow: 0 30px 50px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.08);
             padding: 28px 24px 36px;
-            transition: all 0.2s;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .game-container:hover {
+            transform: scale(1.01);
+            box-shadow: 0 35px 55px rgba(0,0,0,0.7);
         }
 
         h1 {
-            font-size: 2.2rem;
-            background: linear-gradient(135deg, #e0f2fe, #7dd3fc, #c084fc, #f0abfc);
+            font-size: 2.3rem;
+            background: linear-gradient(135deg, #ffffff, #a5f3fc, #c084fc, #f9a8d4);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             text-align: center;
             letter-spacing: -0.5px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
 
         .screen {
             display: none;
-            animation: fadeSlide 0.35s ease-out;
+            animation: floatFade 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
         .active { display: block; }
 
-        @keyframes fadeSlide {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes floatFade {
+            0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* cards & controls */
         .card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 50px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 56px;
             padding: 20px;
             margin: 20px 0;
             border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(4px);
         }
 
         select, button, input {
             background: #0f172ad9;
             border: 1px solid #38bdf8;
             border-radius: 60px;
-            padding: 12px 18px;
+            padding: 12px 20px;
             font-size: 1rem;
             font-weight: 500;
             color: white;
@@ -82,13 +92,17 @@
             margin: 6px 8px;
             outline: none;
         }
+        select:hover, button:hover, input:hover {
+            border-color: #f0abfc;
+            transform: translateY(-2px);
+        }
+        button:active { transform: scale(0.96); }
 
         button {
             background: linear-gradient(105deg, #0c4e6e, #0284c7);
             border: none;
-            box-shadow: 0 5px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.4);
         }
-        button:active { transform: scale(0.96); }
 
         .grid-buttons {
             display: flex;
@@ -104,30 +118,31 @@
             border-left: 4px solid #38bdf8;
         }
 
-        /* game header */
         .game-header {
             display: flex;
             justify-content: space-between;
-            background: #00000055;
+            background: #00000066;
             border-radius: 80px;
-            padding: 10px 20px;
+            padding: 12px 24px;
             margin-bottom: 20px;
             font-weight: bold;
             font-size: 1.2rem;
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(8px);
         }
 
         .question-card {
-            background: linear-gradient(125deg, #0a0f1ecc, #030614cc);
-            border-radius: 56px;
+            background: linear-gradient(125deg, #0a0f1edd, #030614dd);
+            border-radius: 60px;
             padding: 36px 16px;
             text-align: center;
-            font-size: 1.8rem;
+            font-size: 1.9rem;
             font-weight: bold;
             margin: 20px 0;
             word-break: break-word;
-            box-shadow: inset 0 1px 3px #ffffff1a, 0 10px 25px black;
-            border: 1px solid rgba(56,189,248,0.3);
+            box-shadow: inset 0 1px 4px #ffffff1a, 0 15px 30px black;
+            border: 1px solid rgba(56,189,248,0.4);
+            color: white;
+            text-shadow: 0 2px 3px rgba(0,0,0,0.3);
         }
 
         .answers-grid {
@@ -141,6 +156,11 @@
             flex: 1 1 42%;
             font-size: 1.2rem;
             background: #0f212e;
+            transition: all 0.15s;
+        }
+        .answers-grid button:hover {
+            background: #1e3a4a;
+            transform: translateY(-3px);
         }
 
         #typingInput {
@@ -148,18 +168,18 @@
             text-align: center;
             font-size: 1.2rem;
             background: #0f172a;
+            color: white;
         }
 
-        /* popup */
         #popup {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
             background: #1e293b;
-            padding: 14px 28px;
-            border-radius: 60px;
-            font-size: 1.6rem;
+            padding: 16px 32px;
+            border-radius: 80px;
+            font-size: 1.7rem;
             font-weight: bold;
             color: white;
             z-index: 1000;
@@ -187,6 +207,11 @@
             display: flex;
             justify-content: space-between;
             border-left: 6px solid gold;
+            transition: 0.1s;
+        }
+        .leaderboard-entry:hover {
+            background: #1e293b;
+            transform: translateX(5px);
         }
         .quit-btn {
             background: #4c1d95cc;
@@ -196,21 +221,14 @@
             font-size: 0.7rem;
             text-align: center;
             margin-top: 25px;
-            opacity: 0.6;
-        }
-        .badge {
-            background: #0ea5e9;
-            border-radius: 30px;
-            padding: 4px 12px;
-            font-size: 0.7rem;
+            opacity: 0.5;
         }
     </style>
 </head>
 <body>
 <div class="game-container">
-    <h1>🧠 IQ MASTER • ELITE</h1>
+    <h1>🧠 IQ MASTER</h1>
 
-    <!-- MENU -->
     <div id="menuScreen" class="screen active">
         <div class="card">
             <div>📚 Class: 
@@ -232,10 +250,9 @@
             <button onclick="game.start('ai')">🤖 1v1 AI Battle</button>
         </div>
         <button onclick="leaderboard.show()">🏆 Leaderboard</button>
-        <footer>⚡ Install me | Offline ready | Smart questions</footer>
+        <footer>⚡ Install me | Offline ready</footer>
     </div>
 
-    <!-- GAME -->
     <div id="gameScreen" class="screen">
         <div class="game-header">
             <span>⭐ <span id="gameScore">0</span></span>
@@ -249,10 +266,9 @@
             <button id="submitTypingBtn">✓ SUBMIT</button>
             <button class="quit-btn" onclick="game.quit()">🏠 MENU</button>
         </div>
-        <div id="qCounter" style="margin-top: 18px; text-align: center; font-size: 0.85rem; background: #00000033; border-radius: 30px; padding: 6px;"></div>
+        <div id="qCounter" style="margin-top: 18px; text-align: center; font-size: 0.85rem; background: #00000033; border-radius: 40px; padding: 8px;"></div>
     </div>
 
-    <!-- RESULT -->
     <div id="resultScreen" class="screen">
         <h2>📊 GAME OVER</h2>
         <div id="resultMsg" style="font-size: 1.5rem; margin: 20px; text-align: center;"></div>
@@ -260,7 +276,6 @@
         <button onclick="leaderboard.show()">🏆 LEADERBOARD</button>
     </div>
 
-    <!-- LEADERBOARD -->
     <div id="leaderboardScreen" class="screen">
         <h2>🏅 TOP SCORES</h2>
         <div id="leaderList"></div>
@@ -271,40 +286,34 @@
 </div>
 
 <script>
-    // ---------------------- MEGA QUESTION BANK (Math, GK, Science, Logic) ----------------------
+    // ---------- MASTER QUESTION BANK (with plausible distractors for MCQ) ----------
     const masterQuestions = [
-        // MATH (class 1-10)
-        { text: "5 + 3 = ?", answer: "8", topic: "math", minClass: 1, maxClass: 3, difficulty: "Super Easy" },
-        { text: "12 - 7 = ?", answer: "5", topic: "math", minClass: 1, maxClass: 3, difficulty: "Super Easy" },
-        { text: "4 × 6 = ?", answer: "24", topic: "math", minClass: 3, maxClass: 5, difficulty: "Easy" },
-        { text: "81 ÷ 9 = ?", answer: "9", topic: "math", minClass: 4, maxClass: 6, difficulty: "Easy" },
-        { text: "15% of 200 = ?", answer: "30", topic: "math", minClass: 6, maxClass: 8, difficulty: "Medium" },
-        { text: "x + 7 = 15, x = ?", answer: "8", topic: "math", minClass: 6, maxClass: 8, difficulty: "Medium" },
-        { text: "√144 = ?", answer: "12", topic: "math", minClass: 5, maxClass: 7, difficulty: "Medium" },
-        { text: "2³ × 3² = ?", answer: "72", topic: "math", minClass: 7, maxClass: 9, difficulty: "Hard" },
-        { text: "If 3x = 27, x = ?", answer: "9", topic: "math", minClass: 7, maxClass: 9, difficulty: "Hard" },
-        { text: "What is the derivative of x²?", answer: "2x", topic: "math", minClass: 9, maxClass: 10, difficulty: "Einstein" },
-        
-        // GK
-        { text: "Who wrote the Indian national anthem?", answer: "Tagore", topic: "gk", minClass: 3, maxClass: 10, difficulty: "Easy" },
-        { text: "Which planet is known as the Morning Star?", answer: "Venus", topic: "gk", minClass: 4, maxClass: 10, difficulty: "Easy" },
-        { text: "Who painted the Mona Lisa?", answer: "Da Vinci", topic: "gk", minClass: 5, maxClass: 10, difficulty: "Medium" },
-        { text: "What is the longest river in the world?", answer: "Nile", topic: "gk", minClass: 5, maxClass: 10, difficulty: "Medium" },
-        { text: "Which country gifted the Statue of Liberty to the USA?", answer: "France", topic: "gk", minClass: 6, maxClass: 10, difficulty: "Hard" },
-        
-        // Science
-        { text: "What gas do plants release during photosynthesis?", answer: "Oxygen", topic: "science", minClass: 3, maxClass: 10, difficulty: "Easy" },
-        { text: "What is the hardest natural substance?", answer: "Diamond", topic: "science", minClass: 4, maxClass: 10, difficulty: "Easy" },
-        { text: "What is the pH of pure water?", answer: "7", topic: "science", minClass: 6, maxClass: 10, difficulty: "Medium" },
-        { text: "Which organ pumps blood in the human body?", answer: "Heart", topic: "science", minClass: 3, maxClass: 10, difficulty: "Super Easy" },
-        { text: "What is the chemical symbol for Gold?", answer: "Au", topic: "science", minClass: 6, maxClass: 10, difficulty: "Hard" },
-        
-        // Logic / Riddles
-        { text: "What has keys but can't open locks?", answer: "Piano", topic: "logic", minClass: 2, maxClass: 10, difficulty: "Medium" },
-        { text: "I speak without a mouth and hear without ears. Who am I?", answer: "Echo", topic: "logic", minClass: 4, maxClass: 10, difficulty: "Hard" },
+        { text: "5 + 3 = ?", answer: "8", topic: "math", minClass: 1, maxClass: 3, difficulty: "Super Easy", distractors: ["6", "7", "9"] },
+        { text: "12 - 7 = ?", answer: "5", topic: "math", minClass: 1, maxClass: 3, difficulty: "Super Easy", distractors: ["4", "6", "7"] },
+        { text: "4 × 6 = ?", answer: "24", topic: "math", minClass: 3, maxClass: 5, difficulty: "Easy", distractors: ["20", "22", "26"] },
+        { text: "81 ÷ 9 = ?", answer: "9", topic: "math", minClass: 4, maxClass: 6, difficulty: "Easy", distractors: ["7", "8", "10"] },
+        { text: "15% of 200 = ?", answer: "30", topic: "math", minClass: 6, maxClass: 8, difficulty: "Medium", distractors: ["25", "28", "35"] },
+        { text: "x + 7 = 15, x = ?", answer: "8", topic: "math", minClass: 6, maxClass: 8, difficulty: "Medium", distractors: ["6", "7", "9"] },
+        { text: "√144 = ?", answer: "12", topic: "math", minClass: 5, maxClass: 7, difficulty: "Medium", distractors: ["10", "11", "13"] },
+        { text: "2³ × 3² = ?", answer: "72", topic: "math", minClass: 7, maxClass: 9, difficulty: "Hard", distractors: ["64", "68", "80"] },
+        { text: "If 3x = 27, x = ?", answer: "9", topic: "math", minClass: 7, maxClass: 9, difficulty: "Hard", distractors: ["7", "8", "10"] },
+        { text: "What is the derivative of x²?", answer: "2x", topic: "math", minClass: 9, maxClass: 10, difficulty: "Einstein", distractors: ["x", "2", "x²"] },
+        { text: "Who wrote the Indian national anthem?", answer: "Tagore", topic: "gk", minClass: 3, maxClass: 10, difficulty: "Easy", distractors: ["Premchand", "Gandhi", "Nehru"] },
+        { text: "Which planet is known as the Morning Star?", answer: "Venus", topic: "gk", minClass: 4, maxClass: 10, difficulty: "Easy", distractors: ["Mars", "Jupiter", "Mercury"] },
+        { text: "Who painted the Mona Lisa?", answer: "Da Vinci", topic: "gk", minClass: 5, maxClass: 10, difficulty: "Medium", distractors: ["Van Gogh", "Picasso", "Rembrandt"] },
+        { text: "What is the longest river in the world?", answer: "Nile", topic: "gk", minClass: 5, maxClass: 10, difficulty: "Medium", distractors: ["Amazon", "Yangtze", "Mississippi"] },
+        { text: "Which country gifted the Statue of Liberty to the USA?", answer: "France", topic: "gk", minClass: 6, maxClass: 10, difficulty: "Hard", distractors: ["England", "Spain", "Germany"] },
+        { text: "What gas do plants release during photosynthesis?", answer: "Oxygen", topic: "science", minClass: 3, maxClass: 10, difficulty: "Easy", distractors: ["Carbon dioxide", "Nitrogen", "Hydrogen"] },
+        { text: "What is the hardest natural substance?", answer: "Diamond", topic: "science", minClass: 4, maxClass: 10, difficulty: "Easy", distractors: ["Gold", "Iron", "Platinum"] },
+        { text: "What is the pH of pure water?", answer: "7", topic: "science", minClass: 6, maxClass: 10, difficulty: "Medium", distractors: ["5", "6", "8"] },
+        { text: "Which organ pumps blood in the human body?", answer: "Heart", topic: "science", minClass: 3, maxClass: 10, difficulty: "Super Easy", distractors: ["Liver", "Brain", "Lungs"] },
+        { text: "What is the chemical symbol for Gold?", answer: "Au", topic: "science", minClass: 6, maxClass: 10, difficulty: "Hard", distractors: ["Ag", "Fe", "Pb"] },
+        { text: "What has keys but can't open locks?", answer: "Piano", topic: "logic", minClass: 2, maxClass: 10, difficulty: "Medium", distractors: ["Keyboard", "Door", "Chest"] },
+        { text: "I speak without a mouth and hear without ears. Who am I?", answer: "Echo", topic: "logic", minClass: 4, maxClass: 10, difficulty: "Hard", distractors: ["Shadow", "Wind", "Mirror"] },
+        { text: "What is the largest mammal on Earth?", answer: "Whale", topic: "gk", minClass: 2, maxClass: 10, difficulty: "Super Easy", distractors: ["Elephant", "Giraffe", "Hippo"] }
     ];
 
-    // dynamic math generator (for variety, to avoid repeats)
+    // Dynamic math question generator (used when no static question fits or for variety)
     function generateDynamicMath(classLevel, difficulty) {
         let low = 1, high = 20, ops = ['+'];
         if (classLevel >= 7) high = 150;
@@ -319,24 +328,34 @@
         let op = ops[Math.floor(Math.random() * ops.length)];
         let a = Math.floor(Math.random() * (high - low + 1) + low);
         let b = Math.floor(Math.random() * (high/2) + 1);
+        let answer, text;
         if (op === '^2') {
             let base = Math.floor(Math.random() * 15 + 2);
-            return { text: `${base}² = ?`, answer: String(base*base) };
-        }
-        if (op === '/') {
+            answer = String(base*base);
+            text = `${base}² = ?`;
+        } else if (op === '/') {
             b = Math.max(1,b);
             let product = a * b;
-            return { text: `${product} ÷ ${b} = ?`, answer: String(a) };
+            answer = String(a);
+            text = `${product} ÷ ${b} = ?`;
+        } else if (op === '*') {
+            answer = String(a*b);
+            text = `${a} × ${b} = ?`;
+        } else {
+            let result = op === '+' ? a+b : a-b;
+            if (result < 0) { let t=a; a=b; b=t; result = a-b; }
+            answer = String(result);
+            text = `${a} ${op} ${b} = ?`;
         }
-        if (op === '*') {
-            return { text: `${a} × ${b} = ?`, answer: String(a*b) };
-        }
-        let result = op === '+' ? a+b : a-b;
-        if (result < 0) { let t=a; a=b; b=t; result = a-b; }
-        return { text: `${a} ${op} ${b} = ?`, answer: String(result) };
+        // generate numeric distractors
+        let numAns = parseFloat(answer);
+        let dist1 = isNaN(numAns) ? "??" : String(numAns + (Math.random() > 0.5 ? 1 : -1));
+        let dist2 = isNaN(numAns) ? "???" : String(numAns + (Math.random() > 0.5 ? 2 : -2));
+        if (dist1 === answer) dist1 = String(numAns + 1);
+        if (dist2 === answer) dist2 = String(numAns - 1);
+        return { text, answer: answer.toLowerCase(), options: [answer, dist1, dist2] };
     }
 
-    // filter questions by class & difficulty
     function getFilteredStaticQuestions(classLvl, diff) {
         return masterQuestions.filter(q => 
             classLvl >= q.minClass && classLvl <= q.maxClass &&
@@ -344,7 +363,34 @@
         );
     }
 
-    // global game state
+    // Smart option generation: use predefined distractors if available, else generate sensible ones
+    function generateOptions(questionObj, correctAnswer) {
+        if (questionObj.distractors && questionObj.distractors.length >= 2) {
+            let opts = [correctAnswer, ...questionObj.distractors.slice(0,2)];
+            opts.sort(() => Math.random() - 0.5);
+            return opts;
+        }
+        // fallback: generate based on answer type
+        let ans = correctAnswer;
+        if (!isNaN(parseFloat(ans))) {
+            let num = parseFloat(ans);
+            let d1 = String(num + 1);
+            let d2 = String(num - 1);
+            if (d1 === ans) d1 = String(num + 2);
+            if (d2 === ans) d2 = String(num - 2);
+            let opts = [ans, d1, d2];
+            opts.sort(() => Math.random() - 0.5);
+            return opts;
+        } else {
+            // generic fallback (should rarely happen now)
+            let fake = ["Alternative", "Option", "Wrong"];
+            let opts = [ans, fake[0], fake[1]];
+            opts.sort(() => Math.random() - 0.5);
+            return opts;
+        }
+    }
+
+    // GAME MANAGER
     const game = {
         mode: null,
         classLevel: 5,
@@ -357,7 +403,7 @@
         timeLeft: 10,
         active: false,
         currentQuestion: null,
-        usedQuestions: new Set(),   // for infinite mode no repeat
+        usedQuestions: new Set(),
         staticPool: [],
         
         start(mode) {
@@ -370,7 +416,6 @@
             this.totalRounds = (mode === 'infinite') ? Infinity : 5;
             this.active = true;
             this.usedQuestions.clear();
-            // build static pool based on class/diff
             this.staticPool = getFilteredStaticQuestions(this.classLevel, this.difficulty);
             
             document.getElementById('gameScore').innerText = "0";
@@ -391,35 +436,34 @@
         },
         
         getNewQuestion() {
-            // 70% static from pool, 30% dynamic math (avoid repeats in infinite)
             let useDynamic = (Math.random() < 0.3) || (this.staticPool.length === 0);
             let q = null;
             if (useDynamic || this.staticPool.length === 0) {
                 q = generateDynamicMath(this.classLevel, this.difficulty);
                 q.answer = q.answer.toLowerCase();
-                q.options = null;
+                q.options = q.options; // already has options
             } else {
-                // pick random from static pool, avoid repeats in infinite mode
                 let available = this.staticPool.filter(qq => !this.usedQuestions.has(qq.text));
                 if (available.length === 0 && this.mode === 'infinite') {
-                    // if all used, reset used set
                     this.usedQuestions.clear();
                     available = [...this.staticPool];
                 }
                 let picked = available.length ? available[Math.floor(Math.random() * available.length)] : this.staticPool[0];
-                q = { text: picked.text, answer: picked.answer.toLowerCase(), options: null };
+                let correctAns = picked.answer;
+                let opts = generateOptions(picked, correctAns);
+                q = {
+                    text: picked.text,
+                    answer: correctAns.toLowerCase(),
+                    options: opts,
+                    distractors: picked.distractors
+                };
                 if (this.mode === 'infinite') this.usedQuestions.add(q.text);
             }
-            // generate MCQ options if needed
-            if (this.mode === 'mcq') {
-                let correct = q.answer;
-                let fake1 = "??", fake2 = "???";
-                if (correct === "8") { fake1 = "6"; fake2 = "10"; }
-                else if (correct === "Paris") { fake1 = "London"; fake2 = "Berlin"; }
-                else { fake1 = String(parseInt(correct)+1) || "wrong"; fake2 = String(parseInt(correct)-1) || "nope"; }
-                let opts = [correct, fake1, fake2];
-                opts.sort(() => Math.random() - 0.5);
-                q.options = opts;
+            // Ensure options exist for MCQ mode
+            if (this.mode === 'mcq' && !q.options) {
+                let fakeOpts = [q.answer, "alt1", "alt2"];
+                fakeOpts.sort(() => Math.random() - 0.5);
+                q.options = fakeOpts;
             }
             return q;
         },
@@ -457,7 +501,7 @@
                 container.innerHTML = '';
                 typingInp.style.display = 'none';
                 document.getElementById('submitTypingBtn').style.display = 'none';
-                let opts = [this.currentQuestion.answer, "Wrong1", "Wrong2"];
+                let opts = this.currentQuestion.options || [this.currentQuestion.answer, "Wrong1", "Wrong2"];
                 opts.sort(() => Math.random() - 0.5);
                 opts.forEach(opt => {
                     let btn = document.createElement('button');
@@ -521,8 +565,7 @@
             this.active = false;
             clearInterval(this.timer);
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            const resultDiv = document.getElementById('resultScreen');
-            resultDiv.classList.add('active');
+            document.getElementById('resultScreen').classList.add('active');
             let iq = Math.min(160, 80 + this.score * 12);
             let msg = `🧠 Score: ${this.score}  |  IQ: ${iq}`;
             if (this.mode === 'ai') {
@@ -586,7 +629,6 @@
     window.game = game;
     window.leaderboard = leaderboard;
     
-    // Register service worker
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./sw.js').then(reg => console.log('✅ SW registered', reg)).catch(err => console.log('❌ SW fail', err));
