@@ -1,41 +1,18 @@
-const CACHE_NAME = "iqmaster-cache-v1";
-const urlsToCache = [
-  "./index.html",
-  "./manifest.json",
-  "./sw.js",
-  "./icon-192.png",
-  "./icon-512.png"
-];
+const CACHE = "iqmaster-v2";
 
-// Install
-self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(urlsToCache);
-    })
+self.addEventListener("install", e => {
+  e.waitUntil(
+    caches.open(CACHE).then(c => c.addAll([
+      "./",
+      "./index.html",
+      "./manifest.json"
+    ]))
   );
   self.skipWaiting();
 });
 
-// Activate
-self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) return caches.delete(key);
-        })
-      )
-    )
-  );
-  self.clients.claim();
-});
-
-// Fetch
-self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches.match(event.request).then((resp) => {
-      return resp || fetch(event.request);
-    })
+self.addEventListener("fetch", e => {
+  e.respondWith(
+    caches.match(e.request).then(r => r || fetch(e.request))
   );
 });
