@@ -307,7 +307,7 @@
         { text: "Speaks without mouth?", answer: "Echo", classMin: 4, classMax: 10, difficulty: "Hard", distractors: ["Shadow", "Wind", "Mirror"] }
     ];
 
-    // Dynamic math generator (for variety)
+    // Dynamic math generator (for variety, never repeats in infinite mode)
     function generateMathQuestion(classLevel, difficulty) {
         let low = 1, high = 20, ops = ['+'];
         if (classLevel >= 7) high = 150;
