@@ -2,616 +2,81 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#020617">
-  <meta name="description" content="IQ Master – The ultimate brain training experience with adaptive difficulty, AI battles, and stunning visuals.">
-  <title>IQ Master • Next‑Gen Brain Training</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IQ Master</title>
   <link rel="manifest" href="manifest.json">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,500;14..32,700;14..32,800&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      user-select: none; /* better for games, but inputs remain selectable */
-    }
-
-    body {
-      min-height: 100vh;
-      background: radial-gradient(circle at 50% 50%, #0a0f2a, #010101);
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      position: relative;
-      overflow-x: hidden;
-    }
-
-    /* Animated, mouse‑reactive gradient overlay */
-    .dynamic-bg {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(56,189,248,0.15) 0%, rgba(0,0,0,0) 70%);
-      pointer-events: none;
-      z-index: 0;
-      transition: background 0.1s ease;
-    }
-
-    .app-container {
-      position: relative;
-      z-index: 2;
-      max-width: 750px;
-      width: 100%;
-      background: rgba(15, 25, 45, 0.85);
-      backdrop-filter: blur(0px); /* NO BLUR – sharp text */
-      border-radius: 3rem;
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      box-shadow: 0 30px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
-      padding: 2rem 2rem 2.5rem;
-      transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-    }
-
-    .app-container:hover {
-      transform: scale(1.01);
-    }
-
-    h1 {
-      font-size: 2.8rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #FFFFFF, #7DD3FC, #C084FC, #F9A8D4);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      text-align: center;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.5rem;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
-    }
-
-    .sub {
-      text-align: center;
-      color: #94a3b8;
-      margin-bottom: 1.5rem;
-      font-weight: 500;
-      font-size: 0.9rem;
-    }
-
-    .screen {
-      display: none;
-      animation: fadeSlideUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-    }
-    .active { display: block; }
-
-    @keyframes fadeSlideUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Cards */
-    .card {
-      background: rgba(255,255,255,0.05);
-      border-radius: 2rem;
-      padding: 1.5rem;
-      margin: 1.5rem 0;
-      border: 1px solid rgba(255,255,255,0.1);
-      transition: all 0.2s;
-    }
-
-    .card:hover {
-      background: rgba(255,255,255,0.08);
-      border-color: rgba(56,189,248,0.5);
-    }
-
-    /* Form elements */
-    select, button, input {
-      background: #0f172ad9;
-      border: 1px solid #38bdf8;
-      border-radius: 3rem;
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-      font-weight: 500;
-      color: white;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      margin: 0.5rem;
-      outline: none;
-      font-family: inherit;
-    }
-
-    select:hover, button:hover, input:hover {
-      border-color: #f0abfc;
-      transform: translateY(-2px);
-    }
-
-    button:active {
-      transform: scale(0.96);
-    }
-
-    button {
-      background: linear-gradient(105deg, #0c4e6e, #0284c7);
-      border: none;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.3);
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Ripple effect */
-    button::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.3);
-      transform: translate(-50%, -50%);
-      transition: width 0.4s, height 0.4s;
-    }
-    button:active::after {
-      width: 200px;
-      height: 200px;
-    }
-
-    .grid-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-      margin: 1rem 0;
-    }
-    .grid-buttons button {
-      flex: 1 1 40%;
-      min-width: 140px;
-      background: #1e293b;
-      border-left: 4px solid #38bdf8;
-    }
-
-    /* Game header */
-    .game-header {
-      display: flex;
-      justify-content: space-between;
-      background: rgba(0,0,0,0.5);
-      border-radius: 3rem;
-      padding: 0.75rem 1.5rem;
-      margin-bottom: 1.5rem;
-      font-weight: 700;
-      font-size: 1.2rem;
-      backdrop-filter: blur(0px);
-    }
-
-    .question-card {
-      background: linear-gradient(135deg, #0a0f1e, #030614);
-      border-radius: 2.5rem;
-      padding: 2rem 1rem;
-      text-align: center;
-      font-size: 2rem;
-      font-weight: 700;
-      margin: 1.5rem 0;
-      color: white;
-      border: 1px solid rgba(56,189,248,0.5);
-      box-shadow: inset 0 1px 2px rgba(255,255,255,0.1), 0 12px 24px rgba(0,0,0,0.3);
-      letter-spacing: -0.01em;
-    }
-
-    .answers-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-      margin: 1.5rem 0;
-    }
-    .answers-grid button {
-      flex: 1 1 42%;
-      font-size: 1.2rem;
-      background: #0f212e;
-      transition: all 0.2s;
-    }
-    .answers-grid button:hover {
-      background: #1e3a4a;
-      transform: translateY(-4px);
-    }
-
-    #typingInput {
-      width: 85%;
-      text-align: center;
-      font-size: 1.2rem;
-      background: #0f172a;
-    }
-
-    /* Popup */
-    #popup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      background: #1e293b;
-      padding: 1rem 2rem;
-      border-radius: 4rem;
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: white;
-      z-index: 1000;
-      transition: 0.2s cubic-bezier(0.34, 1.2, 0.64, 1);
-      opacity: 0;
-      text-align: center;
-      box-shadow: 0 25px 40px black;
-      pointer-events: none;
-      white-space: nowrap;
-      letter-spacing: -0.02em;
-    }
-    #popup.correct { background: #10b981; box-shadow: 0 0 20px #10b98180; }
-    #popup.wrong { background: #ef4444; box-shadow: 0 0 20px #ef444480; }
-    #popup.show { transform: translate(-50%, -50%) scale(1); opacity: 1; animation: bounceGlow 0.4s ease; }
-    @keyframes bounceGlow {
-      0% { transform: translate(-50%, -50%) scale(0.2); opacity: 0; }
-      70% { transform: translate(-50%, -50%) scale(1.1); }
-      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-    }
-
-    /* Leaderboard */
-    .leaderboard-entry {
-      background: #0f172a;
-      margin: 0.75rem 0;
-      padding: 0.75rem 1.5rem;
-      border-radius: 3rem;
-      display: flex;
-      justify-content: space-between;
-      border-left: 6px solid gold;
-      transition: 0.2s;
-    }
-    .leaderboard-entry:hover {
-      background: #1e293b;
-      transform: translateX(6px);
-    }
-
-    .quit-btn {
-      background: #4c1d95cc;
-      margin-top: 1rem;
-    }
-
-    /* Progress counter */
-    .q-counter {
-      margin-top: 1.5rem;
-      text-align: center;
-      background: rgba(0,0,0,0.3);
-      border-radius: 3rem;
-      padding: 0.5rem;
-      font-size: 0.85rem;
-      font-weight: 500;
-    }
-
-    /* Responsive */
-    @media (max-width: 550px) {
-      .app-container { padding: 1.5rem; }
-      .question-card { font-size: 1.5rem; padding: 1.5rem 0.5rem; }
-      h1 { font-size: 2rem; }
-      .answers-grid button { font-size: 1rem; }
-    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{min-height:100vh;background:linear-gradient(135deg,#0a0f2a,#020617,#1e1b4b);background-size:200% 200%;animation:grad 12s infinite;font-family:system-ui,sans-serif;display:flex;justify-content:center;align-items:center;padding:20px;}
+    @keyframes grad{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+    .container{max-width:650px;width:100%;background:#0f172aee;border-radius:48px;border:1px solid #38bdf8;padding:28px 24px;transition:transform 0.2s;}
+    .container:hover{transform:scale(1.01);}
+    h1{font-size:2rem;text-align:center;background:linear-gradient(135deg,#fff,#7dd3fc,#c084fc);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:20px;}
+    .screen{display:none;animation:fade 0.3s;}
+    .active{display:block;}
+    @keyframes fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+    .card{background:#ffffff0d;border-radius:32px;padding:20px;margin:20px 0;}
+    select,button,input{background:#0f172a;border:1px solid #38bdf8;border-radius:60px;padding:10px 18px;font-size:1rem;color:white;cursor:pointer;transition:0.2s;margin:6px;}
+    button{background:#0c4e6e;border:none;box-shadow:0 4px 10px rgba(0,0,0,0.3);}
+    button:hover,select:hover{transform:translateY(-2px);border-color:#f0abfc;}
+    .grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:10px 0;}
+    .grid button{flex:1 1 40%;min-width:130px;background:#1e293b;border-left:4px solid #38bdf8;}
+    .game-header{display:flex;justify-content:space-between;background:#00000066;border-radius:60px;padding:12px 20px;margin-bottom:20px;font-weight:bold;}
+    .question-card{background:#0a0f1e;border-radius:48px;padding:32px 16px;text-align:center;font-size:1.8rem;font-weight:bold;margin:20px 0;color:white;border:1px solid #38bdf8;}
+    .answers{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:20px 0;}
+    .answers button{flex:1 1 42%;font-size:1.2rem;}
+    #typingInput{width:85%;text-align:center;}
+    #popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:#1e293b;padding:16px 32px;border-radius:80px;font-size:1.6rem;font-weight:bold;color:white;z-index:1000;transition:0.2s;opacity:0;white-space:nowrap;}
+    #popup.correct{background:#10b981;}
+    #popup.wrong{background:#ef4444;}
+    #popup.show{transform:translate(-50%,-50%) scale(1);opacity:1;animation:pop 0.3s;}
+    @keyframes pop{0%{transform:translate(-50%,-50%) scale(0.2);opacity:0;}80%{transform:translate(-50%,-50%) scale(1.1);}100%{transform:translate(-50%,-50%) scale(1);opacity:1;}}
+    .leaderboard-entry{background:#0f172a;margin:12px 0;padding:12px 20px;border-radius:50px;display:flex;justify-content:space-between;border-left:6px solid gold;}
+    .quit-btn{background:#4c1d95cc;margin-top:12px;}
   </style>
 </head>
 <body>
-<div class="dynamic-bg" id="dynamicBg"></div>
-<div class="app-container">
-  <h1>🧠 IQ MASTER</h1>
-  <div class="sub">Adaptive Intelligence • Next‑Gen Training</div>
-
-  <!-- MENU SCREEN -->
-  <div id="menuScreen" class="screen active">
-    <div class="card">
-      <div>📚 Class: 
-        <select id="classSelect">
-          <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
-          <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
-        </select>
-      </div>
-      <div>🎯 Difficulty:
-        <select id="difficultySelect">
-          <option>Super Easy</option><option>Easy</option><option>Medium</option><option>Hard</option><option>Einstein</option>
-        </select>
-      </div>
-    </div>
-    <div class="grid-buttons">
-      <button onclick="game.start('mcq')">📘 MCQ Mode</button>
-      <button onclick="game.start('typing')">⌨️ Typing Mode</button>
-      <button onclick="game.start('infinite')">♾️ Infinite (no repeats)</button>
-      <button onclick="game.start('ai')">🤖 1v1 AI Battle</button>
-    </div>
-    <button onclick="leaderboard.show()" style="width: 100%;">🏆 Hall of Fame</button>
-  </div>
-
-  <!-- GAME SCREEN -->
-  <div id="gameScreen" class="screen">
-    <div class="game-header">
-      <span>⭐ <span id="gameScore">0</span></span>
-      <span>⏱️ <span id="gameTimer">10</span>s</span>
-      <span id="aiBlock" style="display:none;">🤖 AI: <span id="aiScoreVal">0</span></span>
-    </div>
-    <div class="question-card" id="questionText">Loading...</div>
-    <div id="answersArea" class="answers-grid"></div>
-    <input type="text" id="typingInput" placeholder="Type your answer..." autocomplete="off">
-    <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
-      <button id="submitTypingBtn">✓ SUBMIT</button>
-      <button class="quit-btn" onclick="game.quit()">🏠 MENU</button>
-    </div>
-    <div id="qCounter" class="q-counter"></div>
-  </div>
-
-  <!-- RESULT SCREEN -->
-  <div id="resultScreen" class="screen">
-    <h2>📊 GAME OVER</h2>
-    <div id="resultMsg" style="font-size: 1.5rem; margin: 1.5rem; text-align: center;"></div>
-    <button onclick="game.resetToMenu()" style="width: 100%;">🔄 PLAY AGAIN</button>
-    <button onclick="leaderboard.show()" style="width: 100%; margin-top: 0.75rem;">🏆 LEADERBOARD</button>
-  </div>
-
-  <!-- LEADERBOARD SCREEN -->
-  <div id="leaderboardScreen" class="screen">
-    <h2>🏅 LEGENDS</h2>
-    <div id="leaderList"></div>
-    <button onclick="leaderboard.back()" style="width: 100%;">◀ BACK</button>
-  </div>
-
-  <div id="popup"></div>
+<div class="container">
+<h1>🧠 IQ MASTER</h1>
+<div id="menu" class="screen active">
+<div class="card">
+<div>📚 Class: <select id="class"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></div>
+<div>🎯 Difficulty: <select id="diff"><option>Super Easy</option><option>Easy</option><option>Medium</option><option>Hard</option><option>Einstein</option></select></div>
 </div>
-
+<div class="grid"><button onclick="start('mcq')">📘 MCQ</button><button onclick="start('typing')">⌨️ Typing</button><button onclick="start('infinite')">♾️ Infinite</button><button onclick="start('ai')">🤖 AI Battle</button></div>
+<button onclick="showLeaderboard()">🏆 Leaderboard</button>
+</div>
+<div id="game" class="screen">
+<div class="game-header"><span>⭐ <span id="score">0</span></span><span>⏱️ <span id="timer">10</span>s</span><span id="aiBlock" style="display:none;">🤖 AI: <span id="aiScore">0</span></span></div>
+<div class="question-card" id="qText">Loading...</div>
+<div id="answers" class="answers"></div>
+<input type="text" id="typingInput" placeholder="Type answer..." autocomplete="off">
+<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;"><button id="submitBtn">✓ SUBMIT</button><button class="quit-btn" onclick="quit()">🏠 MENU</button></div>
+<div id="counter" style="margin-top:18px;text-align:center;background:#00000033;border-radius:40px;padding:8px;"></div>
+</div>
+<div id="result" class="screen"><h2>GAME OVER</h2><div id="resultMsg" style="font-size:1.5rem;margin:20px;"></div><button onclick="resetMenu()">🔄 PLAY AGAIN</button><button onclick="showLeaderboard()">🏆 LEADERBOARD</button></div>
+<div id="leader" class="screen"><h2>🏅 TOP SCORES</h2><div id="leaderList"></div><button onclick="backToMenu()">◀ BACK</button></div>
+<div id="popup"></div>
+</div>
 <script>
-  // --------------------------------------------------------------
-  //  ENORMOUS, HAND-CRAFTED QUESTION BANK WITH REAL DISTRACTORS
-  // --------------------------------------------------------------
-  const STATIC_QUESTIONS = [
-    // MATH
-    { text: "5 + 3 = ?", answer: "8", classMin: 1, classMax: 3, difficulty: "Super Easy", distractors: ["6", "7", "9"] },
-    { text: "12 - 7 = ?", answer: "5", classMin: 1, classMax: 3, difficulty: "Super Easy", distractors: ["4", "6", "7"] },
-    { text: "4 × 6 = ?", answer: "24", classMin: 3, classMax: 5, difficulty: "Easy", distractors: ["20", "22", "26"] },
-    { text: "81 ÷ 9 = ?", answer: "9", classMin: 4, classMax: 6, difficulty: "Easy", distractors: ["7", "8", "10"] },
-    { text: "15% of 200 = ?", answer: "30", classMin: 6, classMax: 8, difficulty: "Medium", distractors: ["25", "28", "35"] },
-    { text: "x + 7 = 15, x = ?", answer: "8", classMin: 6, classMax: 8, difficulty: "Medium", distractors: ["6", "7", "9"] },
-    { text: "√144 = ?", answer: "12", classMin: 5, classMax: 7, difficulty: "Medium", distractors: ["10", "11", "13"] },
-    { text: "2³ × 3² = ?", answer: "72", classMin: 7, classMax: 9, difficulty: "Hard", distractors: ["64", "68", "80"] },
-    { text: "If 3x = 27, x = ?", answer: "9", classMin: 7, classMax: 9, difficulty: "Hard", distractors: ["7", "8", "10"] },
-    { text: "Derivative of x²?", answer: "2x", classMin: 9, classMax: 10, difficulty: "Einstein", distractors: ["x", "2", "x²"] },
-    // GK
-    { text: "Capital of France?", answer: "Paris", classMin: 2, classMax: 10, difficulty: "Easy", distractors: ["London", "Berlin", "Madrid"] },
-    { text: "Largest mammal?", answer: "Whale", classMin: 2, classMax: 10, difficulty: "Super Easy", distractors: ["Elephant", "Giraffe", "Hippo"] },
-    { text: "Who painted Mona Lisa?", answer: "Da Vinci", classMin: 5, classMax: 10, difficulty: "Medium", distractors: ["Van Gogh", "Picasso", "Rembrandt"] },
-    { text: "Longest river?", answer: "Nile", classMin: 5, classMax: 10, difficulty: "Medium", distractors: ["Amazon", "Yangtze", "Mississippi"] },
-    { text: "Statue of Liberty gift from?", answer: "France", classMin: 6, classMax: 10, difficulty: "Hard", distractors: ["England", "Spain", "Germany"] },
-    // Science
-    { text: "Gas plants release?", answer: "Oxygen", classMin: 3, classMax: 10, difficulty: "Easy", distractors: ["CO2", "Nitrogen", "Hydrogen"] },
-    { text: "Hardest natural substance?", answer: "Diamond", classMin: 4, classMax: 10, difficulty: "Easy", distractors: ["Gold", "Iron", "Platinum"] },
-    { text: "pH of pure water?", answer: "7", classMin: 6, classMax: 10, difficulty: "Medium", distractors: ["5", "6", "8"] },
-    { text: "Pumps blood?", answer: "Heart", classMin: 3, classMax: 10, difficulty: "Super Easy", distractors: ["Liver", "Brain", "Lungs"] },
-    { text: "Symbol for Gold?", answer: "Au", classMin: 6, classMax: 10, difficulty: "Hard", distractors: ["Ag", "Fe", "Pb"] },
-    // Logic & Riddles
-    { text: "Has keys but no locks?", answer: "Piano", classMin: 2, classMax: 10, difficulty: "Medium", distractors: ["Keyboard", "Door", "Chest"] },
-    { text: "Speaks without mouth?", answer: "Echo", classMin: 4, classMax: 10, difficulty: "Hard", distractors: ["Shadow", "Wind", "Mirror"] },
-    { text: "What has a face and two hands but no arms?", answer: "Clock", classMin: 3, classMax: 10, difficulty: "Easy", distractors: ["Watch", "Calendar", "Compass"] },
-    { text: "I have cities, but no houses. I have mountains, but no trees. What am I?", answer: "Map", classMin: 4, classMax: 10, difficulty: "Medium", distractors: ["Globe", "Atlas", "Blueprint"] }
-  ];
-
-  // Dynamic math generator – creates infinite fresh questions
-  function generateMathQuestion(classLevel, difficulty) {
-    let low = 1, high = 20, ops = ['+'];
-    if (classLevel >= 7) high = 150;
-    else if (classLevel >= 5) high = 100;
-    else if (classLevel >= 3) high = 50;
-    if (difficulty === "Super Easy") { ops = ['+']; low = 1; high = 20; }
-    else if (difficulty === "Easy") { ops = ['+','-']; }
-    else if (difficulty === "Medium") { ops = ['+','-','*']; high = Math.min(high+30, 200); }
-    else if (difficulty === "Hard") { ops = ['+','-','*','/']; high = Math.min(high+70, 400); }
-    else if (difficulty === "Einstein") { ops = ['*','/','^2']; high = 500; }
-    
-    let op = ops[Math.floor(Math.random() * ops.length)];
-    let a = Math.floor(Math.random() * (high - low + 1) + low);
-    let b = Math.floor(Math.random() * (high/2) + 1);
-    let text, answer;
-    if (op === '^2') {
-      let base = Math.floor(Math.random() * 15 + 2);
-      answer = String(base * base);
-      text = `${base}² = ?`;
-    } else if (op === '/') {
-      b = Math.max(1, b);
-      let product = a * b;
-      answer = String(a);
-      text = `${product} ÷ ${b} = ?`;
-    } else if (op === '*') {
-      answer = String(a * b);
-      text = `${a} × ${b} = ?`;
-    } else {
-      let result = op === '+' ? a + b : a - b;
-      if (result < 0) { let t = a; a = b; b = t; result = a - b; }
-      answer = String(result);
-      text = `${a} ${op} ${b} = ?`;
-    }
-    let num = parseFloat(answer);
-    let d1 = String(num + 1);
-    let d2 = String(num - 1);
-    if (d1 === answer) d1 = String(num + 2);
-    if (d2 === answer) d2 = String(num - 2);
-    return { text, answer: answer.toLowerCase(), distractors: [d1, d2] };
-  }
-
-  function filterStaticQuestions(classLevel, difficulty) {
-    return STATIC_QUESTIONS.filter(q => 
-      classLevel >= q.classMin && classLevel <= q.classMax &&
-      (q.difficulty === difficulty || (difficulty === "Einstein" && q.difficulty === "Hard"))
-    );
-  }
-
-  // --------------------- GAME ENGINE ---------------------
-  const game = {
-    mode: null,
-    classLevel: 5,
-    difficulty: "Medium",
-    score: 0,
-    aiScore: 0,
-    questionsDone: 0,
-    totalRounds: 5,
-    timer: null,
-    timeLeft: 10,
-    active: false,
-    currentQ: null,
-    usedQuestions: new Set(),
-    staticPool: [],
-    
-    start(mode) {
-      this.mode = mode;
-      this.classLevel = parseInt(document.getElementById('classSelect').value);
-      this.difficulty = document.getElementById('difficultySelect').value;
-      this.score = 0;
-      this.aiScore = 0;
-      this.questionsDone = 0;
-      this.totalRounds = (mode === 'infinite') ? Infinity : 5;
-      this.active = true;
-      this.usedQuestions.clear();
-      this.staticPool = filterStaticQuestions(this.classLevel, this.difficulty);
-      
-      document.getElementById('gameScore').innerText = "0";
-      document.getElementById('gameTimer').innerText = "10";
-      const aiBlock = document.getElementById('aiBlock');
-      if (mode === 'ai') {
-        aiBlock.style.display = 'flex';
-        document.getElementById('aiScoreVal').innerText = "0";
-      } else aiBlock.style.display = 'none';
-      
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById('gameScreen').classList.add('active');
-      document.getElementById('typingInput').style.display = (mode === 'typing') ? 'block' : 'none';
-      document.getElementById('submitTypingBtn').style.display = (mode === 'typing') ? 'inline-block' : 'none';
-      document.getElementById('answersArea').innerHTML = '';
-      if (this.timer) clearInterval(this.timer);
-      this.nextQuestion();
-    },
-    
-    getFreshQuestion() {
-      let useDynamic = (Math.random() < 0.3) || (this.staticPool.length === 0);
-      let q;
-      if (useDynamic) {
-        q = generateMathQuestion(this.classLevel, this.difficulty);
-        q.answer = q.answer.toLowerCase();
-      } else {
-        let available = this.staticPool.filter(qq => !this.usedQuestions.has(qq.text));
-        if (available.length === 0 && this.mode === 'infinite') {
-          this.usedQuestions.clear();
-          available = [...this.staticPool];
-        }
-        let picked = available.length ? available[Math.floor(Math.random() * available.length)] : this.staticPool[0];
-        q = {
-          text: picked.text,
-          answer: picked.answer.toLowerCase(),
-          distractors: picked.distractors
-        };
-        if (this.mode === 'infinite') this.usedQuestions.add(q.text);
-      }
-      if (this.mode === 'mcq') {
-        let opts = [q.answer, ...(q.distractors || ["tmp1", "tmp2"])];
-        opts = opts.slice(0, 3);
-        for (let i = opts.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [opts[i], opts[j]] = [opts[j], opts[i]];
-        }
-        q.options = opts;
-      }
-      return q;
-    },
-    
-    nextQuestion() {
-      if (!this.active) return;
-      if (this.mode !== 'infinite' && this.questionsDone >= this.totalRounds) {
-        this.endGame();
-        return;
-      }
-      this.currentQ = this.getFreshQuestion();
-      document.getElementById('questionText').innerText = this.currentQ.text;
-      const container = document.getElementById('answersArea');
-      const typingInp = document.getElementById('typingInput');
-      
-      if (this.mode === 'mcq' && this.currentQ.options) {
-        container.innerHTML = '';
-        typingInp.style.display = 'none';
-        document.getElementById('submitTypingBtn').style.display = 'none';
-        this.currentQ.options.forEach(opt => {
-          let btn = document.createElement('button');
-          btn.innerText = opt;
-          btn.onclick = () => this.checkAnswer(opt);
-          container.appendChild(btn);
-        });
-      } else if (this.mode === 'typing') {
-        container.innerHTML = '';
-        typingInp.style.display = 'block';
-        typingInp.value = '';
-        typingInp.focus();
-        document.getElementById('submitTypingBtn').style.display = 'inline-block';
-        document.getElementById('submitTypingBtn').onclick = () => {
-          this.checkAnswer(typingInp.value.trim());
-        };
-      } else {
-        container.innerHTML = '';
-        typingInp.style.display = 'none';
-        document.getElementById('submitTypingBtn').style.display = 'none';
-        let opts = [this.currentQ.answer, ...(this.currentQ.distractors || ["opt1", "opt2"])];
-        opts = opts.slice(0, 3);
-        for (let i = opts.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [opts[i], opts[j]] = [opts[j], opts[i]];
-        }
-        opts.forEach(opt => {
-          let btn = document.createElement('button');
-          btn.innerText = opt;
-          btn.onclick = () => this.checkAnswer(opt);
-          container.appendChild(btn);
-        });
-      }
-      const counterText = (this.mode === 'infinite') ? `🔁 Round ${this.questionsDone+1} (no repeats)` : `📌 Q${this.questionsDone+1}/${this.totalRounds}`;
-      document.getElementById('qCounter').innerHTML = counterText;
-      this.startTimer();
-    },
-    
-    startTimer() {
-      if (this.timer) clearInterval(this.timer);
-      this.timeLeft = 10;
-      document.getElementById('gameTimer').innerText = this.timeLeft;
-      this.timer = setInterval(() => {
-        if (!this.active) return;
-        this.timeLeft--;
-        document.getElementById('gameTimer').innerText = this.timeLeft >= 0 ? this.timeLeft : 0;
-        if (this.timeLeft <= 0) {
-          clearInterval(this.timer);
-          if (this.mode === 'ai') {
-            this.aiScore++;
-            document.getElementById('aiScoreVal').innerText = this.aiScore;
-          }
-          this.showPopup(`⏰ Timeout! Answer: ${this.currentQ.answer}`, 'wrong');
-          this.questionsDone++;
-          this.updateUI();
-          this.nextQuestion();
-        }
-      }, 1000);
-    },
-    
-    checkAnswer(userAns) {
-      if (!this.active) return;
-      clearInterval(this.timer);
-      const isCorrect = (userAns.toLowerCase().trim() === this.currentQ.answer);
-      if (isCorrect) {
-        this.score++;
-        this.showPopup("✅ Correct!", "correct");
-      } else {
-        if (this.mode === 'ai') {
-          this.aiScore++;
-          document.getElementById('aiScoreVal').innerText = this.aiScore;
-        }
-        this.showPopup(`❌ Wrong! Answer: ${this.currentQ.answer}`, "wrong");
-      }
-      this.questionsDone++;
-      this.updateUI();
-      this.nextQuestion();
-    },
-    
-    updateUI() {
-      document.getElementById('gameScore').inner
+const staticQs=[{t:"5+3=?",a:"8",cMin:1,cMax:3,diff:"Super Easy",d:["6","7","9"]},{t:"12-7=?",a:"5",cMin:1,cMax:3,diff:"Super Easy",d:["4","6","7"]},{t:"4×6=?",a:"24",cMin:3,cMax:5,diff:"Easy",d:["20","22","26"]},{t:"81÷9=?",a:"9",cMin:4,cMax:6,diff:"Easy",d:["7","8","10"]},{t:"15% of 200=?",a:"30",cMin:6,cMax:8,diff:"Medium",d:["25","28","35"]},{t:"x+7=15,x=?",a:"8",cMin:6,cMax:8,diff:"Medium",d:["6","7","9"]},{t:"√144=?",a:"12",cMin:5,cMax:7,diff:"Medium",d:["10","11","13"]},{t:"2³×3²=?",a:"72",cMin:7,cMax:9,diff:"Hard",d:["64","68","80"]},{t:"3x=27,x=?",a:"9",cMin:7,cMax:9,diff:"Hard",d:["7","8","10"]},{t:"Derivative of x²?",a:"2x",cMin:9,cMax:10,diff:"Einstein",d:["x","2","x²"]},{t:"Capital of France?",a:"Paris",cMin:2,cMax:10,diff:"Easy",d:["London","Berlin","Madrid"]},{t:"Largest mammal?",a:"Whale",cMin:2,cMax:10,diff:"Super Easy",d:["Elephant","Giraffe","Hippo"]},{t:"Who painted Mona Lisa?",a:"Da Vinci",cMin:5,cMax:10,diff:"Medium",d:["Van Gogh","Picasso","Rembrandt"]},{t:"Longest river?",a:"Nile",cMin:5,cMax:10,diff:"Medium",d:["Amazon","Yangtze","Mississippi"]},{t:"Statue of Liberty gift from?",a:"France",cMin:6,cMax:10,diff:"Hard",d:["England","Spain","Germany"]},{t:"Gas plants release?",a:"Oxygen",cMin:3,cMax:10,diff:"Easy",d:["CO2","Nitrogen","Hydrogen"]},{t:"Hardest natural substance?",a:"Diamond",cMin:4,cMax:10,diff:"Easy",d:["Gold","Iron","Platinum"]},{t:"pH of pure water?",a:"7",cMin:6,cMax:10,diff:"Medium",d:["5","6","8"]},{t:"Pumps blood?",a:"Heart",cMin:3,cMax:10,diff:"Super Easy",d:["Liver","Brain","Lungs"]},{t:"Symbol for Gold?",a:"Au",cMin:6,cMax:10,diff:"Hard",d:["Ag","Fe","Pb"]},{t:"Has keys but no locks?",a:"Piano",cMin:2,cMax:10,diff:"Medium",d:["Keyboard","Door","Chest"]},{t:"Speaks without mouth?",a:"Echo",cMin:4,cMax:10,diff:"Hard",d:["Shadow","Wind","Mirror"]}];
+function genMath(cLvl,diff){let low=1,high=20,ops=['+'];if(cLvl>=7)high=150;else if(cLvl>=5)high=100;else if(cLvl>=3)high=50;if(diff==="Super Easy")ops=['+'];else if(diff==="Easy")ops=['+','-'];else if(diff==="Medium"){ops=['+','-','*'];high=Math.min(high+30,200);}else if(diff==="Hard"){ops=['+','-','*','/'];high=Math.min(high+70,400);}else if(diff==="Einstein"){ops=['*','/','^2'];high=500;}let op=ops[Math.floor(Math.random()*ops.length)],a=Math.floor(Math.random()*(high-low+1)+low),b=Math.floor(Math.random()*(high/2)+1),text,ans;if(op==='^2'){let base=Math.floor(Math.random()*15+2);ans=String(base*base);text=`${base}²=?`;}else if(op==='/'){b=Math.max(1,b);let prod=a*b;ans=String(a);text=`${prod}÷${b}=?`;}else if(op==='*'){ans=String(a*b);text=`${a}×${b}=?`;}else{let res=op==='+'?a+b:a-b;if(res<0){let t=a;a=b;b=t;res=a-b;}ans=String(res);text=`${a} ${op} ${b}=?`;}let num=parseFloat(ans),d1=String(num+1),d2=String(num-1);if(d1===ans)d1=String(num+2);if(d2===ans)d2=String(num-2);return{text,answer:ans.toLowerCase(),distractors:[d1,d2]};}
+let mode,classLevel=5,difficulty="Medium",score=0,aiScore=0,qIndex=0,totalRounds=5,timer,timeLeft=10,active=false,currentQ=null,used=new Set(),staticPool=[];
+function filterStatic(c,d){return staticQs.filter(q=>c>=q.cMin&&c<=q.cMax&&(q.diff===d||(d==="Einstein"&&q.diff==="Hard")));}
+function freshQ(){let useDynamic=Math.random()<0.3||staticPool.length===0,q;if(useDynamic){q=genMath(classLevel,difficulty);q.answer=q.answer.toLowerCase();}else{let avail=staticPool.filter(qq=>!used.has(qq.t));if(avail.length===0&&mode==='infinite'){used.clear();avail=[...staticPool];}let picked=avail.length?avail[Math.floor(Math.random()*avail.length)]:staticPool[0];q={text:picked.t,answer:picked.a.toLowerCase(),distractors:picked.d};if(mode==='infinite')used.add(q.text);}if(mode==='mcq'){let opts=[q.answer,...(q.distractors||["x","y"])];opts=opts.slice(0,3);for(let i=opts.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[opts[i],opts[j]]=[opts[j],opts[i]];}q.options=opts;}return q;}
+function nextQ(){if(!active)return;if(mode!=='infinite'&&qIndex>=totalRounds){endGame();return;}currentQ=freshQ();document.getElementById('qText').innerText=currentQ.text;let container=document.getElementById('answers'),typingInp=document.getElementById('typingInput');if(mode==='mcq'&&currentQ.options){container.innerHTML='';typingInp.style.display='none';document.getElementById('submitBtn').style.display='none';currentQ.options.forEach(opt=>{let btn=document.createElement('button');btn.innerText=opt;btn.onclick=()=>check(opt);container.appendChild(btn);});}else if(mode==='typing'){container.innerHTML='';typingInp.style.display='block';typingInp.value='';typingInp.focus();document.getElementById('submitBtn').style.display='inline-block';document.getElementById('submitBtn').onclick=()=>check(typingInp.value.trim());}else{container.innerHTML='';typingInp.style.display='none';document.getElementById('submitBtn').style.display='none';let opts=[currentQ.answer,...(currentQ.distractors||["a","b"])];opts=opts.slice(0,3);for(let i=opts.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[opts[i],opts[j]]=[opts[j],opts[i]];}opts.forEach(opt=>{let btn=document.createElement('button');btn.innerText=opt;btn.onclick=()=>check(opt);container.appendChild(btn);});}let counterText=(mode==='infinite')?`🔁 Round ${qIndex+1} (no repeats)`:`📌 Q${qIndex+1}/${totalRounds}`;document.getElementById('counter').innerHTML=counterText;startTimer();}
+function startTimer(){if(timer)clearInterval(timer);timeLeft=10;document.getElementById('timer').innerText=timeLeft;timer=setInterval(()=>{if(!active)return;timeLeft--;document.getElementById('timer').innerText=timeLeft>=0?timeLeft:0;if(timeLeft<=0){clearInterval(timer);if(mode==='ai'){aiScore++;document.getElementById('aiScore').innerText=aiScore;}showPopup(`⏰ Timeout! Answer: ${currentQ.answer}`,'wrong');qIndex++;updateUI();nextQ();}},1000);}
+function check(ans){if(!active)return;clearInterval(timer);let isCorrect=(ans.toLowerCase().trim()===currentQ.answer);if(isCorrect){score++;showPopup("✅ Correct!",'correct');}else{if(mode==='ai'){aiScore++;document.getElementById('aiScore').innerText=aiScore;}showPopup(`❌ Wrong! Answer: ${currentQ.answer}`,'wrong');}qIndex++;updateUI();nextQ();}
+function updateUI(){document.getElementById('score').innerText=score;if(mode==='ai')document.getElementById('aiScore').innerText=aiScore;}
+function endGame(){active=false;clearInterval(timer);document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('result').classList.add('active');let iq=Math.min(160,80+score*12),msg=`🧠 Score: ${score}  |  IQ: ${iq}`;if(mode==='ai')msg+=`<br>🤖 AI: ${aiScore}  |  ${score>aiScore?'🏆 YOU WIN!':(score===aiScore?'🤝 DRAW':'💀 AI WINS')}`;document.getElementById('resultMsg').innerHTML=msg;saveScore(score);}
+function saveScore(s){let arr=JSON.parse(localStorage.getItem('iqScores'))||[];arr.push({score:s,date:new Date().toLocaleDateString(),mode:mode});arr.sort((a,b)=>b.score-a.score);arr=arr.slice(0,8);localStorage.setItem('iqScores',JSON.stringify(arr));}
+function start(m){mode=m;classLevel=parseInt(document.getElementById('class').value);difficulty=document.getElementById('diff').value;score=0;aiScore=0;qIndex=0;totalRounds=(m==='infinite')?Infinity:5;active=true;used.clear();staticPool=filterStatic(classLevel,difficulty);document.getElementById('score').innerText="0";document.getElementById('timer').innerText="10";let aiBlock=document.getElementById('aiBlock');if(m==='ai'){aiBlock.style.display='flex';document.getElementById('aiScore').innerText="0";}else aiBlock.style.display='none';document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('game').classList.add('active');document.getElementById('typingInput').style.display=(m==='typing')?'block':'none';document.getElementById('submitBtn').style.display=(m==='typing')?'inline-block':'none';document.getElementById('answers').innerHTML='';if(timer)clearInterval(timer);nextQ();}
+function quit(){active=false;clearInterval(timer);resetMenu();}
+function resetMenu(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('menu').classList.add('active');}
+function showPopup(msg,type){let pop=document.getElementById('popup');pop.innerText=msg;pop.className=type+' show';setTimeout(()=>pop.className='',1800);}
+function showLeaderboard(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('leader').classList.add('active');let listDiv=document.getElementById('leaderList');let scores=JSON.parse(localStorage.getItem('iqScores'))||[];if(scores.length===0){listDiv.innerHTML='<div class="leaderboard-entry">✨ No scores yet. Play a game!</div>';return;}listDiv.innerHTML='';scores.forEach((e,i)=>{let div=document.createElement('div');div.className='leaderboard-entry';div.innerHTML=`<span>#${i+1} ⭐ ${e.score}</span><span>${e.mode} • ${e.date}</span>`;listDiv.appendChild(div);});}
+function backToMenu(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('menu').classList.add('active');}
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').catch(e=>console.log("SW error",e));});}
+</script>
+</body>
+</html>
