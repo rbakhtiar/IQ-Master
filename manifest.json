@@ -1,20 +1,67 @@
 {
-  "name": "IQ Master",
+  "name": "🧠 IQ Master - Ultimate Brain Trainer",
   "short_name": "IQ Master",
-  "start_url": "./index.html",
+  "description": "Challenge your mind with MCQ, Typing, Infinite & AI Battle modes! Progressive Web App for all ages & classes.",
+  "start_url": "/index.html",
+  "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "portrait-primary",
   "background_color": "#020617",
   "theme_color": "#0ea5e9",
-  "icons": [
+  "theme_color_data": "#0ea5e9",
+  "categories": ["games", "education", "productivity", "utilities"],
+  "lang": "en",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "shortcuts": [
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='192' height='192'%3E%3Crect width='100%25' height='100%25' fill='%230ea5e9'/%3E%3Ctext x='50%25' y='55%25' font-size='80' text-anchor='middle' fill='white'%3E🧠%3C/text%3E%3C/svg%3E",
-      "sizes": "192x192",
-      "type": "image/svg+xml"
+      "name": "Quick MCQ Game",
+      "short_name": "MCQ",
+      "description": "Start Multiple Choice Questions instantly",
+      "url": "/index.html#mcq",
+      "icons": [{ "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Ccircle cx='48' cy='48' r='44' fill='%230ea5e9'/%3E%3Ctext x='48' y='58' font-size='40' text-anchor='middle' fill='white' font-weight='bold'%3E📘%3C/text%3E%3C/svg%3E", "sizes": "96x96" }]
     },
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512'%3E%3Crect width='100%25' height='100%25' fill='%239333ea'/%3E%3Ctext x='50%25' y='55%25' font-size='200' text-anchor='middle' fill='white'%3E🧠%3C/text%3E%3C/svg%3E",
-      "sizes": "512x512",
-      "type": "image/svg+xml"
+      "name": "AI Battle Mode",
+      "short_name": "AI Battle",
+      "description": "Challenge the AI opponent",
+      "url": "/index.html#ai",
+      "icons": [{ "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Ccircle cx='48' cy='48' r='44' fill='%23ef4444'/%3E%3Ctext x='48' y='58' font-size='40' text-anchor='middle' fill='white'%3E🤖%3C/text%3E%3C/svg%3E", "sizes": "96x96" }]
+    },
+    {
+      "name": "View Leaderboard",
+      "short_name": "Scores",
+      "description": "Check top scores and records",
+      "url": "/index.html#leaderboard",
+      "icons": [{ "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Ccircle cx='48' cy='48' r='44' fill='%23f59e0b'/%3E%3Ctext x='48' y='58' font-size='40' text-anchor='middle' fill='white'%3E🏆%3C/text%3E%3C/svg%3E", "sizes": "96x96" }]
+    },
+    {
+      "name": "Infinite Mode",
+      "short_name": "Infinite",
+      "description": "Endless questions without repeats",
+      "url": "/index.html#infinite",
+      "icons": [{ "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Ccircle cx='48' cy='48' r='44' fill='%238b5cf6'/%3E%3Ctext x='48' y='58' font-size='36' text-anchor='middle' fill='white'%3E♾️%3C/text%3E%3C/svg%3E", "sizes": "96x96" }]
     }
-  ]
-}
+  ],
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cmFkaWFsR3JhZGllbnQgaWQ9ImEiIGN4PSI5NiIgY3k9IjE5MiIgcj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzBlYTVlOTtzdG9wLW9wYWNpdHk6MSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6IzFjM2RiNztzdG9wLW9wYWNpdHk6MSIvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjYSkiIHJ4PSI0OCIvPjxjaXJjbGUgY3g9Ijk2IiBjeT0iNjQiIHI9IjI0IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIwLjIiLz48dGV4dCB4PSI5NiIgeT0iMTAwIiBmb250LXNpemU9IjgwIiBmb250LXdlaWdodD0iOTAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSI+🧠PC90ZXh0Pjx0ZXh0IHg9Ijk2IiB5PSIxNDAiIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSI3MDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiNmZmYiIG9wYWNpdHk9IjAuOCI+QlJBSU4gVEFPPC90ZXh0Pjwvc3ZnPg==",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cmFkaWFsR3JhZGllbnQgaWQ9ImIiIGN4PSIyNTYiIGN5PSI1MTIiIHI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM5MzMzZWE7c3RvcC1vcGFjaXR5OjEiLz48c3RvcCBvZmZzZXQ9IjUwJSIgc3R5bGU9InN0b3AtY29sb3I6IzM5YWRmYTtzdG9wLW9wYWNpdHk6MSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6IzYxMjhiZjtzdG9wLW9wYWNpdHk6MSIvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjYikiIHJ4PSIyNDUiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIxNjAiIHI9IjY0IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIwLjMiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIxNjAiIHI9IjMyIiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC44Ii8+PHRleHQgeD0iMjU2IiB5PSIyNjAiIGZvbnQtc2l6ZT0iMjAwIiBmb250LXdlaWdodD0iOTAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSI+🧠PC90ZXh0Pjx0ZXh0IHg9IjI1NiIgeT0iMzkwIiBmb250LXNpemU9IjYwIiBmb250LXdlaWdodD0iODAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC45Ij5NQVNURVJNPjwvdGV4dD48L3N2Zz4=",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTM2IiBoZWlnaHQ9IjE2MSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImMiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwZWE1ZTkiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxYzNkYjciLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2MpIiByeD0iMjQiLz48Y2lyY2xlIGN4PSI2OCIgY3k9IjQ4IiByPSIxMiIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iMC4yIi8+PHRleHQgeD0iNjgiIHk9IjEwMCIgZm9udC1zaXplPSIzMiIgZm9udC13ZWlnaHQ9IjkwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPuKAmTwvdGV4dD48L3N2Zz4=",
+      "sizes": "136x161",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    },
+    {
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlL29yZ5vuPBoAAAI/klEQVR4nO3df4xV9bn/8fdLJh2hW4hS7K7rK3s7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O
