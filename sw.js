@@ -1,5 +1,48 @@
-const CACHE='iq-v1';
-const FILES=['./','./index.html','./manifest.json'];
-self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting())));
-self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(f=>{if(e.request.method==='GET'&&e.request.url.startsWith(self.location.origin)){let c=f.clone();caches.open(CACHE).then(cache=>cache.put(e.request,c));}return f;}).catch(()=>caches.match('./index.html')))));
-self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.map(key=>key!==CACHE&&caches.delete(key)))).then(()=>self.clients.claim())));
+const CACHE = 'iq-v1';
+const FILES = ['./', './index.html', './manifest.json'];
+
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE)
+      .then(cache => cache.addAll(FILES))
+      .then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => {
+        if (response) {
+          return response;
+        }
+        return fetch(event.request).then(fetchResponse => {
+          if (event.request.method === 'GET' && event.request.url.startsWith(self.location.origin)) {
+            const responseClone = fetchResponse.clone();
+            caches.open(CACHE).then(cache => {
+              cache.put(event.request, responseClone);
+            });
+          }
+          return fetchResponse;
+        }).catch(() => {
+          return caches.match('./index.html');
+        });
+      })
+  );
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    }).then(() => {
+      return self.clients.claim();
+    })
+  );
+});
