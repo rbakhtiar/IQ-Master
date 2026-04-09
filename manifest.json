@@ -1,6 +1,7 @@
 {
   "name": "IQ Master: Brain Training",
   "short_name": "IQ Master",
+  "description": "The ultimate brain training experience with adaptive difficulty, AI battles, and stunning visuals.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#020617",
