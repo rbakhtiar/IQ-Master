@@ -5,22 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IQ Master</title>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0f172a">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  
   <style>
-    :root {
-      --bg-primary: #0f172a;
-      --bg-secondary: #020617;
-      --accent: #38bdf8;
-      --accent-hover: #f0abfc;
-      --success: #10b981;
-      --error: #ef4444;
-      --glass: rgba(255,255,255,0.05);
-      --border: rgba(56,189,248,0.4);
-    }
-
     * {
       margin: 0;
       padding: 0;
@@ -30,707 +15,656 @@
 
     body {
       min-height: 100vh;
-      background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary), #1e1b4b);
+      background: linear-gradient(135deg, #0f172a, #020617, #1e1b4b);
       background-size: 200% 200%;
       animation: gradientFlow 15s ease infinite;
-      font-family: system-ui, -apple-system, sans-serif;
+      font-family: 'Segoe UI', system-ui, 'Inter', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px;
-      color: white;
     }
 
-    @keyframes gradientFlow { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
     .app {
       max-width: 650px;
       width: 100%;
-      background: rgba(15, 23, 42, 0.95);
-      backdrop-filter: blur(20px);
+      background: rgba(15, 23, 42, 0.9);
       border-radius: 56px;
-      border: 1px solid var(--border);
-      box-shadow: 0 25px 50px rgba(0,0,0,0.6);
-      padding: 32px 28px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      box-shadow: 0 25px 40px rgba(0, 0, 0, 0.5);
+      padding: 28px 24px;
+      transition: transform 0.2s ease;
     }
 
-    .app::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 56px;
-      padding: 2px;
-      background: linear-gradient(45deg, var(--accent), var(--accent-hover), gold);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask-composite: exclude;
-      opacity: 0.6;
+    .app:hover {
+      transform: scale(1.01);
+    }
+
+    /* Gradient text: turquoise to blueish purple */
+    h1, .question-card {
+      background: linear-gradient(135deg, #40E0D0, #8A2BE2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-align: center;
     }
 
     h1 {
-      font-size: clamp(2rem, 5vw, 2.5rem);
-      text-align: center;
-      background: linear-gradient(135deg, #fff, #7dd3fc, #c084fc, gold);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      margin-bottom: 24px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
+      font-size: 2.3rem;
+      margin-bottom: 20px;
     }
 
-    .screen { display: none; animation: fadeSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-    .active { display: block; }
+    .question-card {
+      font-size: 1.9rem;
+      font-weight: bold;
+      margin: 20px 0;
+      border: 1px solid #38bdf8;
+      background-color: #0a0f1e; /* fallback */
+      background: linear-gradient(135deg, #40E0D0, #8A2BE2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      padding: 32px 16px;
+      border-radius: 48px;
+      box-shadow: inset 0 1px 2px rgba(255,255,255,0.1), 0 10px 20px rgba(0,0,0,0.3);
+    }
+
+    .screen {
+      display: none;
+      animation: fadeSlide 0.4s ease-out;
+    }
+
+    .active {
+      display: block;
+    }
 
     @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .card {
-      background: var(--glass);
-      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.05);
       border-radius: 40px;
-      padding: 24px;
+      padding: 20px;
       margin: 20px 0;
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    select, input, button {
-      background: var(--bg-primary);
-      border: 2px solid var(--accent);
-      border-radius: 50px;
-      padding: 14px 24px;
+    select, button, input {
+      background: #0f172a;
+      border: 1px solid #38bdf8;
+      border-radius: 60px;
+      padding: 12px 20px;
       font-size: 1rem;
-      font-weight: 600;
+      font-weight: 500;
       color: white;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      margin: 8px;
+      transition: all 0.2s ease;
+      margin: 6px;
       outline: none;
-      font-family: inherit;
     }
 
-    select:focus, input:focus, button:focus {
-      outline: 3px solid var(--accent);
-      outline-offset: 2px;
+    select:hover, button:hover, input:hover {
+      border-color: #f0abfc;
+      transform: translateY(-2px);
     }
 
-    select:hover, input:hover, button:hover:not(:disabled) {
-      border-color: var(--accent-hover);
-      transform: translateY(-3px);
-      box-shadow: 0 12px 25px rgba(56,189,248,0.3);
+    button:active {
+      transform: scale(0.96);
     }
 
-    button:active { transform: scale(0.97); }
-    button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-    button.primary {
-      background: linear-gradient(135deg, #0284c7, #38bdf8);
+    button {
+      background: linear-gradient(105deg, #0c4e6e, #0284c7);
       border: none;
-      box-shadow: 0 8px 20px rgba(2,132,199,0.4);
-      font-size: 1.1rem;
-      font-weight: 700;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
     }
 
     .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 16px;
-      margin: 20px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+      margin: 15px 0;
     }
 
     .grid button {
-      background: rgba(30,41,59,0.8);
-      border-left: 5px solid var(--accent);
-      padding: 18px;
+      flex: 1 1 40%;
+      min-width: 140px;
+      background: #1e293b;
+      border-left: 4px solid #38bdf8;
     }
 
     .game-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(15px);
-      border-radius: 50px;
-      padding: 16px 24px;
-      margin-bottom: 24px;
-      font-weight: 700;
-      font-size: 1.3rem;
-    }
-
-    .question-card {
-      background: #0a0f1e;
-      border-radius: 48px;
-      padding: 40px 24px;
-      text-align: center;
-      font-size: clamp(1.6rem, 4vw, 2rem);
-      font-weight: 800;
-      margin: 24px 0;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 60px;
+      padding: 12px 20px;
+      margin-bottom: 20px;
+      font-weight: bold;
+      font-size: 1.2rem;
       color: white;
-      border: 2px solid var(--accent);
-      box-shadow: 
-        inset 0 1px 3px rgba(255,255,255,0.1),
-        0 20px 40px rgba(0,0,0,0.4);
     }
 
     .answers {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
       justify-content: center;
-      margin: 24px 0;
+      margin: 20px 0;
     }
 
     .answers button {
-      font-size: 1.15rem;
-      background: rgba(15,33,46,0.9);
-      padding: 20px;
-      min-height: 70px;
-      border: 2px solid transparent;
+      flex: 1 1 42%;
+      font-size: 1.2rem;
+      background: #0f212e;
     }
 
     .answers button:hover {
-      background: rgba(30,58,74,0.9);
-      border-color: var(--accent);
-      transform: translateY(-4px);
+      background: #1e3a4a;
+      transform: translateY(-3px);
     }
 
     #typingInput {
-      width: 100%;
-      max-width: 400px;
+      width: 85%;
       text-align: center;
-      font-size: 1.2rem;
-      margin: 20px auto;
-      display: none;
     }
 
     #popup {
       position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(10px);
-      transform: translateY(100vh);
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: #1e293b;
+      padding: 16px 32px;
+      border-radius: 80px;
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: white;
       z-index: 1000;
+      transition: 0.2s cubic-bezier(0.34, 1.2, 0.64, 1);
+      opacity: 0;
+      text-align: center;
+      box-shadow: 0 20px 35px black;
       pointer-events: none;
+      white-space: nowrap;
+    }
+
+    #popup.correct {
+      background: #10b981;
+    }
+
+    #popup.wrong {
+      background: #ef4444;
     }
 
     #popup.show {
-      transform: translateY(0);
-      pointer-events: all;
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+      animation: bounce 0.4s ease;
     }
 
-    .popup-content {
-      background: var(--bg-primary);
-      padding: 24px 40px;
-      border-radius: 60px;
-      font-size: 1.8rem;
-      font-weight: 800;
-      text-align: center;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.8);
-      transform: scale(0.7);
-      animation: popupBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-      border: 3px solid var(--accent);
-    }
-
-    #popup.correct .popup-content { background: linear-gradient(135deg, var(--success), #059669); border-color: #059669; }
-    #popup.wrong .popup-content { background: linear-gradient(135deg, var(--error), #dc2626); border-color: #dc2626; }
-
-    @keyframes popupBounce {
-      0% { transform: scale(0.3); }
-      50% { transform: scale(1.1); }
-      70% { transform: scale(0.95); }
-      100% { transform: scale(1); }
+    @keyframes bounce {
+      0% {
+        transform: translate(-50%, -50%) scale(0.2);
+        opacity: 0;
+      }
+      70% {
+        transform: translate(-50%, -50%) scale(1.1);
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
     }
 
     .leaderboard-entry {
-      background: rgba(15,23,42,0.9);
+      background: #0f172a;
       margin: 12px 0;
-      padding: 16px 24px;
+      padding: 12px 20px;
       border-radius: 50px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
       border-left: 6px solid gold;
-      transition: all 0.3s ease;
+      transition: 0.2s;
+      color: white;
     }
 
     .leaderboard-entry:hover {
-      background: rgba(30,41,59,0.9);
-      transform: translateX(8px);
-      box-shadow: 0 10px 30px rgba(255,215,0,0.3);
+      background: #1e293b;
+      transform: translateX(5px);
     }
 
-    .quit-btn { background: linear-gradient(135deg, #7c3aed, #a855f7); margin-top: 16px; }
-
-    .stats { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
-      gap: 12px; 
-      margin: 20px 0;
-      text-align: center;
-    }
-
-    .stat-item {
-      background: var(--glass);
-      padding: 16px;
-      border-radius: 24px;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    /* Responsive */
-    @media (max-width: 480px) {
-      .app { padding: 24px 20px; border-radius: 32px; }
-      .question-card { padding: 28px 16px; font-size: 1.4rem; }
-      .answers { grid-template-columns: 1fr 1fr; }
-    }
-
-    /* Accessibility */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-    }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
+    .quit-btn {
+      background: #4c1d95cc;
+      margin-top: 12px;
     }
   </style>
 </head>
 <body>
-  <div class="app" role="main">
-    <h1>🧠 IQ MASTER</h1>
+<div class="app">
+  <h1>🧠 IQ MASTER</h1>
 
-    <!-- MENU SCREEN -->
-    <section id="menuScreen" class="screen active" role="menu" aria-label="Main menu">
-      <div class="card">
-        <div class="stats">
-          <div class="stat-item">
-            <label for="classSelect">📚 Class Level</label>
-            <select id="classSelect" aria-describedby="class-help">
-              <option value="1">1</option><option value="2">2</option><option value="3">3</option>
-              <option value="4">4</option><option value="5">5</option><option value="6">6</option>
-              <option value="7">7</option><option value="8">8</option><option value="9">9</option>
-              <option value="10">10</option>
-            </select>
-          </div>
-          <div class="stat-item">
-            <label for="difficultySelect">🎯 Difficulty</label>
-            <select id="difficultySelect">
-              <option>Super Easy</option><option>Easy</option><option>Medium</option><option>Hard</option><option>Einstein</option>
-            </select>
-          </div>
-        </div>
-        <p id="class-help" class="sr-only">Select appropriate class level for question difficulty</p>
+  <!-- MENU -->
+  <div id="menuScreen" class="screen active">
+    <div class="card">
+      <div style="color:white;">📚 Class:
+        <select id="classSelect">
+          <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+          <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+        </select>
       </div>
-      
-      <div class="grid">
-        <button id="mcqBtn" class="primary" aria-label="Multiple Choice Questions mode">📘 MCQ Mode</button>
-        <button id="typingBtn" class="primary" aria-label="Typing answer mode">⌨️ Typing Mode</button>
-        <button id="infiniteBtn" class="primary" aria-label="Infinite questions no repeats">♾️ Infinite Mode</button>
-        <button id="aiBtn" class="primary" aria-label="1v1 AI Battle mode">🤖 AI Battle</button>
+      <div style="color:white;">🎯 Difficulty:
+        <select id="difficultySelect">
+          <option>Super Easy</option><option>Easy</option><option>Medium</option><option>Hard</option><option>Einstein</option>
+        </select>
       </div>
-      <button id="leaderboardBtn" class="primary">🏆 Leaderboard</button>
-    </section>
-
-    <!-- GAME SCREEN -->
-    <section id="gameScreen" class="screen" aria-live="polite" role="game">
-      <header class="game-header" aria-label="Game status">
-        <span>⭐ <span id="gameScore" aria-label="Player score">0</span></span>
-        <span>⏱️ <span id="gameTimer" aria-label="Time remaining">10</span>s</span>
-        <span id="aiBlock" style="display:none;" aria-label="AI opponent score">🤖 AI: <span id="aiScoreVal">0</span></span>
-      </header>
-      
-      <div class="question-card" id="questionText" role="status" aria-live="assertive">Loading...</div>
-      
-      <div id="answersArea" class="answers" role="radiogroup" aria-label="Answer choices"></div>
-      
-      <input type="text" id="typingInput" placeholder="Type your answer here..." 
-             autocomplete="off" aria-label="Type answer input">
-      
-      <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 24px;">
-        <button id="submitTypingBtn" class="primary" style="display:none;">✓ Submit Answer</button>
-        <button id="quitGameBtn" class="quit-btn">🏠 Menu</button>
-      </div>
-      
-      <div id="qCounter" style="margin-top: 20px; text-align: center; background: rgba(0,0,0,0.4); border-radius: 40px; padding: 12px; font-weight: 600;"></div>
-    </section>
-
-    <!-- RESULT SCREEN -->
-    <section id="resultScreen" class="screen" role="alertdialog" aria-labelledby="result-title">
-      <h2 id="result-title">📊 Game Complete</h2>
-      <div id="resultMsg" style="font-size: 1.6rem; margin: 24px 0; text-align: center; line-height: 1.5;"></div>
-      <div class="grid">
-        <button id="playAgainBtn" class="primary">🔄 Play Again</button>
-        <button id="leaderboardFromResultBtn" class="primary">🏆 Leaderboard</button>
-      </div>
-    </section>
-
-    <!-- LEADERBOARD SCREEN -->
-    <section id="leaderboardScreen" class="screen" role="region" aria-label="High scores">
-      <h2>🏅 Top Scores</h2>
-      <div id="leaderList" aria-label="Leaderboard entries"></div>
-      <button id="backToMenuBtn" class="primary">◀ Back to Menu</button>
-    </section>
-
-    <div id="popup" role="status">
-      <div class="popup-content"></div>
     </div>
+    <div class="grid">
+      <button id="mcqBtn">📘 MCQ Mode</button>
+      <button id="typingBtn">⌨️ Typing Mode</button>
+      <button id="infiniteBtn">♾️ Infinite (no repeats)</button>
+      <button id="aiBtn">🤖 1v1 AI Battle</button>
+    </div>
+    <button id="leaderboardBtn">🏆 Leaderboard</button>
   </div>
 
-  <script>
-    'use strict';
+  <!-- GAME -->
+  <div id="gameScreen" class="screen">
+    <div class="game-header">
+      <span>⭐ <span id="gameScore">0</span></span>
+      <span>⏱️ <span id="gameTimer">10</span>s</span>
+      <span id="aiBlock" style="display:none;">🤖 AI: <span id="aiScoreVal">0</span></span>
+    </div>
+    <div class="question-card" id="questionText">Loading...</div>
+    <div id="answersArea" class="answers"></div>
+    <input type="text" id="typingInput" placeholder="Type your answer..." autocomplete="off">
+    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+      <button id="submitTypingBtn">✓ SUBMIT</button>
+      <button id="quitGameBtn" class="quit-btn">🏠 MENU</button>
+    </div>
+    <div id="qCounter" style="margin-top: 18px; text-align: center; background: #00000033; border-radius: 40px; padding: 8px; color:white;"></div>
+  </div>
 
-    // Game configuration and question bank
-    const GAME_CONFIG = {
-      TOTAL_ROUNDS: 5,
-      TIMER_DURATION: 10,
-      CACHE_KEY: 'iqMasterScores',
-      MAX_LEADERBOARD: 10
-    };
+  <!-- RESULT -->
+  <div id="resultScreen" class="screen">
+    <h2 style="color:white;">📊 GAME OVER</h2>
+    <div id="resultMsg" style="font-size: 1.5rem; margin: 20px; text-align: center; color:white;"></div>
+    <button id="playAgainBtn">🔄 PLAY AGAIN</button>
+    <button id="leaderboardFromResultBtn">🏆 LEADERBOARD</button>
+  </div>
 
-    const QUESTION_BANK = [
-      // [Previous static questions - keeping all 22 for brevity]
-      { t: "5 + 3 = ?", a: "8", cMin: 1, cMax: 3, diff: "Super Easy", d: ["6", "7", "9"] },
-      // ... (all existing questions remain the same)
-    ];
+  <!-- LEADERBOARD -->
+  <div id="leaderboardScreen" class="screen">
+    <h2 style="color:white;">🏅 TOP SCORES</h2>
+    <div id="leaderList"></div>
+    <button id="backToMenuBtn">◀ BACK</button>
+  </div>
 
-    class IQMasterGame {
-      constructor() {
-        this.mode = null;
-        this.classLevel = 5;
-        this.difficulty = 'Medium';
-        this.score = 0;
-        this.aiScore = 0;
-        this.qIndex = 0;
-        this.timeLeft = GAME_CONFIG.TIMER_DURATION;
-        this.active = false;
-        this.currentQuestion = null;
-        this.usedQuestions = new Set();
-        this.staticPool = [];
-        this.timer = null;
-        
-        this.init();
-      }
+  <div id="popup"></div>
+</div>
 
-      init() {
-        this.bindEvents();
-        this.registerSW();
-        this.updateScreen('menuScreen');
-      }
+<script>
+  // ---------- QUESTION BANK (static) ----------
+  const STATIC_QS = [
+    { t: "5 + 3 = ?", a: "8", cMin: 1, cMax: 3, diff: "Super Easy", d: ["6", "7", "9"] },
+    { t: "12 - 7 = ?", a: "5", cMin: 1, cMax: 3, diff: "Super Easy", d: ["4", "6", "7"] },
+    { t: "4 × 6 = ?", a: "24", cMin: 3, cMax: 5, diff: "Easy", d: ["20", "22", "26"] },
+    { t: "81 ÷ 9 = ?", a: "9", cMin: 4, cMax: 6, diff: "Easy", d: ["7", "8", "10"] },
+    { t: "15% of 200 = ?", a: "30", cMin: 6, cMax: 8, diff: "Medium", d: ["25", "28", "35"] },
+    { t: "x + 7 = 15, x = ?", a: "8", cMin: 6, cMax: 8, diff: "Medium", d: ["6", "7", "9"] },
+    { t: "√144 = ?", a: "12", cMin: 5, cMax: 7, diff: "Medium", d: ["10", "11", "13"] },
+    { t: "2³ × 3² = ?", a: "72", cMin: 7, cMax: 9, diff: "Hard", d: ["64", "68", "80"] },
+    { t: "3x = 27, x = ?", a: "9", cMin: 7, cMax: 9, diff: "Hard", d: ["7", "8", "10"] },
+    { t: "Derivative of x²?", a: "2x", cMin: 9, cMax: 10, diff: "Einstein", d: ["x", "2", "x²"] },
+    { t: "Capital of France?", a: "Paris", cMin: 2, cMax: 10, diff: "Easy", d: ["London", "Berlin", "Madrid"] },
+    { t: "Largest mammal?", a: "Whale", cMin: 2, cMax: 10, diff: "Super Easy", d: ["Elephant", "Giraffe", "Hippo"] },
+    { t: "Who painted Mona Lisa?", a: "Da Vinci", cMin: 5, cMax: 10, diff: "Medium", d: ["Van Gogh", "Picasso", "Rembrandt"] },
+    { t: "Longest river?", a: "Nile", cMin: 5, cMax: 10, diff: "Medium", d: ["Amazon", "Yangtze", "Mississippi"] },
+    { t: "Statue of Liberty gift from?", a: "France", cMin: 6, cMax: 10, diff: "Hard", d: ["England", "Spain", "Germany"] },
+    { t: "Gas plants release?", a: "Oxygen", cMin: 3, cMax: 10, diff: "Easy", d: ["CO2", "Nitrogen", "Hydrogen"] },
+    { t: "Hardest natural substance?", a: "Diamond", cMin: 4, cMax: 10, diff: "Easy", d: ["Gold", "Iron", "Platinum"] },
+    { t: "pH of pure water?", a: "7", cMin: 6, cMax: 10, diff: "Medium", d: ["5", "6", "8"] },
+    { t: "Pumps blood?", a: "Heart", cMin: 3, cMax: 10, diff: "Super Easy", d: ["Liver", "Brain", "Lungs"] },
+    { t: "Symbol for Gold?", a: "Au", cMin: 6, cMax: 10, diff: "Hard", d: ["Ag", "Fe", "Pb"] },
+    { t: "Has keys but no locks?", a: "Piano", cMin: 2, cMax: 10, diff: "Medium", d: ["Keyboard", "Door", "Chest"] },
+    { t: "Speaks without mouth?", a: "Echo", cMin: 4, cMax: 10, diff: "Hard", d: ["Shadow", "Wind", "Mirror"] }
+  ];
 
-      bindEvents() {
-        const events = {
-          'mcqBtn': () => this.startGame('mcq'),
-          'typingBtn': () => this.startGame('typing'),
-          'infiniteBtn': () => this.startGame('infinite'),
-          'aiBtn': () => this.startGame('ai'),
-          'leaderboardBtn': () => this.showLeaderboard(),
-          'quitGameBtn': () => this.quitGame(),
-          'playAgainBtn': () => this.updateScreen('menuScreen'),
-          'leaderboardFromResultBtn': () => this.showLeaderboard(),
-          'backToMenuBtn': () => this.updateScreen('menuScreen'),
-          'submitTypingBtn': () => this.checkAnswer(this.getTypingInput())
-        };
+  // Dynamic math generator
+  function generateMath(classLevel, difficulty) {
+    let low = 1, high = 20, ops = ['+'];
+    if (classLevel >= 7) high = 150;
+    else if (classLevel >= 5) high = 100;
+    else if (classLevel >= 3) high = 50;
+    if (difficulty === "Super Easy") ops = ['+'];
+    else if (difficulty === "Easy") ops = ['+', '-'];
+    else if (difficulty === "Medium") { ops = ['+', '-', '*']; high = Math.min(high + 30, 200); }
+    else if (difficulty === "Hard") { ops = ['+', '-', '*', '/']; high = Math.min(high + 70, 400); }
+    else if (difficulty === "Einstein") { ops = ['*', '/', '^2']; high = 500; }
 
-        Object.entries(events).forEach(([id, handler]) => {
-          const el = document.getElementById(id);
-          if (el) el.onclick = handler;
-        });
+    let op = ops[Math.floor(Math.random() * ops.length)];
+    let a = Math.floor(Math.random() * (high - low + 1) + low);
+    let b = Math.floor(Math.random() * (high / 2) + 1);
+    let text, answer;
 
-        // Typing input handler
-        document.getElementById('typingInput').addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') this.checkAnswer(e.target.value.trim());
-        });
+    if (op === '^2') {
+      let base = Math.floor(Math.random() * 15 + 2);
+      answer = String(base * base);
+      text = `${base}² = ?`;
+    } else if (op === '/') {
+      b = Math.max(1, b);
+      let product = a * b;
+      answer = String(a);
+      text = `${product} ÷ ${b} = ?`;
+    } else if (op === '*') {
+      answer = String(a * b);
+      text = `${a} × ${b} = ?`;
+    } else {
+      let result = op === '+' ? a + b : a - b;
+      if (result < 0) { let t = a; a = b; b = t; result = a - b; }
+      answer = String(result);
+      text = `${a} ${op} ${b} = ?`;
+    }
+    let num = parseFloat(answer);
+    let d1 = String(num + 1);
+    let d2 = String(num - 1);
+    if (d1 === answer) d1 = String(num + 2);
+    if (d2 === answer) d2 = String(num - 2);
+    return { text, answer: answer.toLowerCase(), distractors: [d1, d2] };
+  }
 
-        // Settings sync
-        document.getElementById('classSelect').onchange = (e) => this.classLevel = parseInt(e.target.value);
-        document.getElementById('difficultySelect').onchange = (e) => this.difficulty = e.target.value;
-      }
+  function filterStatic(classLevel, difficulty) {
+    return STATIC_QS.filter(q =>
+      classLevel >= q.cMin && classLevel <= q.cMax &&
+      (q.diff === difficulty || (difficulty === "Einstein" && q.diff === "Hard"))
+    );
+  }
 
-      registerSW() {
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.register('./sw.js', { scope: './' })
-            .catch(err => console.warn('Service Worker registration failed:', err));
-        }
-      }
+  // ---------- GAME STATE ----------
+  let mode = null;
+  let classLevel = 5;
+  let difficulty = "Medium";
+  let score = 0;
+  let aiScore = 0;
+  let qIndex = 0;
+  let totalRounds = 5;
+  let timer = null;
+  let timeLeft = 10;
+  let active = false;
+  let currentQ = null;
+  let usedQuestions = new Set();   // tracks used questions in current session (all modes)
+  let staticPool = [];
 
-      updateScreen(screenId) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(screenId)?.classList.add('active');
-      }
+  // Helper functions
+  function showPopup(msg, type) {
+    const pop = document.getElementById('popup');
+    pop.innerText = msg;
+    pop.className = type + ' show';
+    setTimeout(() => pop.className = '', 1800);
+  }
 
-      async startGame(mode) {
-        this.mode = mode;
-        this.score = 0;
-        this.aiScore = 0;
-        this.qIndex = 0;
-        this.active = true;
-        this.usedQuestions.clear();
-        this.staticPool = this.filterStaticQuestions();
+  function updateUI() {
+    document.getElementById('gameScore').innerText = score;
+    if (mode === 'ai') document.getElementById('aiScoreVal').innerText = aiScore;
+  }
 
-        this.updateScoreDisplay();
-        this.toggleAIBlock(mode === 'ai');
-        
-        this.updateScreen('gameScreen');
-        await this.nextQuestion();
-      }
+  function saveHighScore(finalScore) {
+    let scores = JSON.parse(localStorage.getItem('iqMasterScores')) || [];
+    scores.push({ score: finalScore, date: new Date().toLocaleDateString(), mode: mode });
+    scores.sort((a, b) => b.score - a.score);
+    scores = scores.slice(0, 8);
+    localStorage.setItem('iqMasterScores', JSON.stringify(scores));
+  }
 
-      filterStaticQuestions() {
-        return QUESTION_BANK.filter(q => 
-          this.classLevel >= q.cMin && this.classLevel <= q.cMax &&
-          (q.diff === this.difficulty || (this.difficulty === 'Einstein' && q.diff === 'Hard'))
-        );
-      }
+  function endGame() {
+    active = false;
+    if (timer) clearInterval(timer);
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('resultScreen').classList.add('active');
+    let iq = Math.min(160, 80 + score * 12);
+    let msg = `🧠 Score: ${score}  |  IQ: ${iq}`;
+    if (mode === 'ai') {
+      msg += `<br>🤖 AI: ${aiScore}  |  ${score > aiScore ? '🏆 YOU WIN!' : (score === aiScore ? '🤝 DRAW' : '💀 AI WINS')}`;
+    }
+    document.getElementById('resultMsg').innerHTML = msg;
+    saveHighScore(score);
+  }
 
-      async nextQuestion() {
-        if (!this.active) return;
-
-        if (this.mode !== 'infinite' && this.qIndex >= GAME_CONFIG.TOTAL_ROUNDS) {
-          return this.endGame();
-        }
-
-        this.currentQuestion = this.generateQuestion();
-        this.renderQuestion();
-        this.startTimer();
-      }
-
-      generateQuestion() {
-        const useDynamic = Math.random() < 0.4 || this.staticPool.length === 0;
-        
-        if (useDynamic || this.mode === 'ai') {
-          return this.generateDynamicMath();
-        }
-
-        const available = this.staticPool.filter(q => !this.usedQuestions.has(q.t));
-        if (this.mode === 'infinite' && available.length === 0) {
-          this.usedQuestions.clear();
-        }
-
-        const question = available[Math.floor(Math.random() * available.length)] || this.staticPool[0];
-        if (this.mode === 'infinite') this.usedQuestions.add(question.t);
-        
-        return {
-          text: question.t,
-          answer: question.a.toLowerCase(),
-          distractors: question.d
-        };
-      }
-
-      generateDynamicMath() {
-        // Enhanced math generator logic (keeping original for brevity)
-        const config = this.getMathConfig();
-        // ... existing generateMath logic
-        return { text: '2 + 2 = ?', answer: '4', distractors: ['3', '5'] }; // Simplified
-      }
-
-      renderQuestion() {
-        document.getElementById('questionText').textContent = this.currentQuestion.text;
-        
-        if (this.mode === 'mcq' || this.mode === 'ai' || this.mode === 'infinite') {
-          this.renderMCQOptions();
+  // Returns a new question not used in this session (if possible)
+  function getFreshQuestion() {
+    let useDynamic = (Math.random() < 0.3) || (staticPool.length === 0);
+    let q;
+    if (useDynamic) {
+      q = generateMath(classLevel, difficulty);
+      q.answer = q.answer.toLowerCase();
+      // For dynamic questions, we don't track repeats because they are virtually infinite
+      // But we still need to ensure that in infinite mode we don't repeat dynamic ones? They are random so unlikely.
+    } else {
+      // Available static questions that haven't been used yet
+      let available = staticPool.filter(qq => !usedQuestions.has(qq.t));
+      if (available.length === 0) {
+        // If all static questions have been used, reset the used set (only for infinite mode; for other modes we just pick any)
+        if (mode === 'infinite') {
+          usedQuestions.clear();
+          available = [...staticPool];
         } else {
-          this.showTypingInput();
-        }
-
-        const counter = this.mode === 'infinite' 
-          ? `🔁 Round ${this.qIndex + 1}`
-          : `📌 Q${this.qIndex + 1}/${GAME_CONFIG.TOTAL_ROUNDS}`;
-        document.getElementById('qCounter').textContent = counter;
-      }
-
-      renderMCQOptions() {
-        const container = document.getElementById('answersArea');
-        const typingInput = document.getElementById('typingInput');
-        const submitBtn = document.getElementById('submitTypingBtn');
-        
-        typingInput.style.display = 'none';
-        submitBtn.style.display = 'none';
-        container.innerHTML = '';
-
-        const options = this.shuffleOptions();
-        options.forEach(option => {
-          const btn = document.createElement('button');
-          btn.textContent = option;
-          btn.setAttribute('role', 'radio');
-          btn.setAttribute('aria-checked', 'false');
-          btn.onclick = () => this.checkAnswer(option);
-          container.appendChild(btn);
-        });
-      }
-
-      showTypingInput() {
-        const container = document.getElementById('answersArea');
-        const typingInput = document.getElementById('typingInput');
-        const submitBtn = document.getElementById('submitTypingBtn');
-        
-        container.innerHTML = '';
-        typingInput.style.display = 'block';
-        submitBtn.style.display = 'inline-flex';
-        typingInput.value = '';
-        typingInput.focus();
-      }
-
-      shuffleOptions() {
-        const options = [this.currentQuestion.answer, ...(this.currentQuestion.distractors || [])];
-        for (let i = options.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [options[i], options[j]] = [options[j], options[i]];
-        }
-        return options.slice(0, 4);
-      }
-
-      startTimer() {
-        if (this.timer) clearInterval(this.timer);
-        this.timeLeft = GAME_CONFIG.TIMER_DURATION;
-        this.updateTimerDisplay();
-
-        this.timer = setInterval(() => {
-          if (!this.active) return;
-          
-          this.timeLeft--;
-          this.updateTimerDisplay();
-          
-          if (this.timeLeft <= 0) {
-            clearInterval(this.timer);
-            this.handleTimeout();
-          }
-        }, 1000);
-      }
-
-      checkAnswer(userAnswer) {
-        if (!this.active) return;
-        
-        clearInterval(this.timer);
-        const isCorrect = userAnswer.toLowerCase().trim() === this.currentQuestion.answer;
-        
-        if (isCorrect) {
-          this.score++;
-          this.showFeedback('✅ Correct!', 'correct');
-        } else {
-          if (this.mode === 'ai') this.aiScore++;
-          this.showFeedback(`❌ Wrong! ${this.currentQuestion.answer}`, 'wrong');
-        }
-        
-        this.updateScoreDisplay();
-        this.qIndex++;
-        setTimeout(() => this.nextQuestion(), 1500);
-      }
-
-      handleTimeout() {
-        if (this.mode === 'ai') {
-          this.aiScore++;
-          this.updateScoreDisplay();
-        }
-        this.showFeedback(`⏰ Time! ${this.currentQuestion.answer}`, 'wrong');
-        this.qIndex++;
-        setTimeout(() => this.nextQuestion(), 1500);
-      }
-
-      showFeedback(message, type) {
-        const popup = document.getElementById('popup');
-        const content = popup.querySelector('.popup-content');
-        content.textContent = message;
-        popup.className = `show ${type}`;
-        setTimeout(() => popup.className = '', 1800);
-      }
-
-      endGame() {
-        this.active = false;
-        if (this.timer) clearInterval(this.timer);
-        
-        const iqEstimate = Math.min(160, 80 + this.score * 12);
-        let message = `🧠 Score: ${this.score} | IQ: ${iqEstimate}`;
-        
-        if (this.mode === 'ai') {
-          message += `<br>🤖 AI: ${this.aiScore} | ${
-            this.score > this.aiScore ? '🏆 YOU WIN!' : 
-            this.score === this.aiScore ? '🤝 DRAW' : '💀 AI WINS'
-          }`;
-        }
-        
-        document.getElementById('resultMsg').innerHTML = message;
-        this.saveScore();
-        this.updateScreen('resultScreen');
-      }
-
-      saveScore() {
-        const scores = JSON.parse(localStorage.getItem(GAME_CONFIG.CACHE_KEY)) || [];
-        scores.unshift({
-          score: this.score,
-          aiScore: this.aiScore,
-          mode: this.mode,
-          date: new Date().toLocaleDateString(),
-          classLevel: this.classLevel,
-          difficulty: this.difficulty
-        });
-        
-        localStorage.setItem(GAME_CONFIG.CACHE_KEY, JSON.stringify(
-          scores.slice(0, GAME_CONFIG.MAX_LEADERBOARD)
-            .sort((a, b) => b.score - a.score)
-        ));
-      }
-
-      showLeaderboard() {
-        const scores = JSON.parse(localStorage.getItem(GAME_CONFIG.CACHE_KEY)) || [];
-        const container = document.getElementById('leaderList');
-        
-        if (!scores.length) {
-          container.innerHTML = '<div class="leaderboard-entry">✨ Play to set records!</div>';
-          return;
-        }
-
-        container.innerHTML = scores.map((entry, idx) => `
-          <div class="leaderboard-entry" role="listitem">
-            <span>#${idx + 1} ⭐ ${entry.score}</span>
-            <span>${entry.mode} • ${entry.date}</span>
-          </div>
-        `).join('');
-        
-        this.updateScreen('leaderboardScreen');
-      }
-
-      updateScoreDisplay() {
-        document.getElementById('gameScore').textContent = this.score;
-        if (this.mode === 'ai') {
-          document.getElementById('aiScoreVal').textContent = this.aiScore;
+          // For non-infinite modes (5 rounds), if we somehow run out (unlikely because we have many questions), just pick any
+          available = [...staticPool];
         }
       }
-
-      toggleAIBlock(show) {
-        document.getElementById('aiBlock').style.display = show ? 'flex' : 'none';
+      let picked = available.length ? available[Math.floor(Math.random() * available.length)] : staticPool[0];
+      q = {
+        text: picked.t,
+        answer: picked.a.toLowerCase(),
+        distractors: picked.d
+      };
+      // Mark as used for this session (applies to all modes to prevent repeats within the same game)
+      usedQuestions.add(q.text);
+    }
+    // Build MCQ options if needed
+    if (mode === 'mcq') {
+      let opts = [q.answer, ...(q.distractors || ["tmp1", "tmp2"])];
+      opts = opts.slice(0, 3);
+      for (let i = opts.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [opts[i], opts[j]] = [opts[j], opts[i]];
       }
+      q.options = opts;
+    }
+    return q;
+  }
 
-      getTypingInput() {
-        return document.getElementById('typingInput').value;
-      }
-
-      updateTimerDisplay() {
-        document.getElementById('gameTimer').textContent = Math.max(0, this.timeLeft);
-      }
-
-      quitGame() {
-        this.active = false;
-        if (this.timer) clearInterval(this.timer);
-        this.updateScreen('menuScreen');
-      }
+  function nextQuestion() {
+    if (!active) return;
+    if (mode !== 'infinite' && qIndex >= totalRounds) {
+      endGame();
+      return;
     }
 
-    // Initialize game when DOM is ready
-    document.addEventListener('DOMContentLoaded', () => new IQMasterGame());
-  </script>
+    currentQ = getFreshQuestion();
+    document.getElementById('questionText').innerText = currentQ.text;
+    const container = document.getElementById('answersArea');
+    const typingInp = document.getElementById('typingInput');
+
+    if (mode === 'mcq' && currentQ.options) {
+      container.innerHTML = '';
+      typingInp.style.display = 'none';
+      document.getElementById('submitTypingBtn').style.display = 'none';
+      currentQ.options.forEach(opt => {
+        let btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt);
+        container.appendChild(btn);
+      });
+    } else if (mode === 'typing') {
+      container.innerHTML = '';
+      typingInp.style.display = 'block';
+      typingInp.value = '';
+      typingInp.focus();
+      document.getElementById('submitTypingBtn').style.display = 'inline-block';
+      // Replace listener to avoid duplicates
+      const submitBtn = document.getElementById('submitTypingBtn');
+      const newSubmit = submitBtn.cloneNode(true);
+      submitBtn.parentNode.replaceChild(newSubmit, submitBtn);
+      newSubmit.onclick = () => {
+        checkAnswer(typingInp.value.trim());
+      };
+    } else {
+      container.innerHTML = '';
+      typingInp.style.display = 'none';
+      document.getElementById('submitTypingBtn').style.display = 'none';
+      let opts = [currentQ.answer, ...(currentQ.distractors || ["opt1", "opt2"])];
+      opts = opts.slice(0, 3);
+      for (let i = opts.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [opts[i], opts[j]] = [opts[j], opts[i]];
+      }
+      opts.forEach(opt => {
+        let btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt);
+        container.appendChild(btn);
+      });
+    }
+
+    const counterText = (mode === 'infinite') ? `🔁 Round ${qIndex + 1} (no repeats)` : `📌 Q${qIndex + 1}/${totalRounds}`;
+    document.getElementById('qCounter').innerHTML = counterText;
+    startTimer();
+  }
+
+  function startTimer() {
+    if (timer) clearInterval(timer);
+    timeLeft = 10;
+    document.getElementById('gameTimer').innerText = timeLeft;
+    timer = setInterval(() => {
+      if (!active) return;
+      timeLeft--;
+      document.getElementById('gameTimer').innerText = timeLeft >= 0 ? timeLeft : 0;
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        if (mode === 'ai') {
+          aiScore++;
+          document.getElementById('aiScoreVal').innerText = aiScore;
+        }
+        showPopup(`⏰ Timeout! Answer: ${currentQ.answer}`, 'wrong');
+        qIndex++;
+        updateUI();
+        nextQuestion();
+      }
+    }, 1000);
+  }
+
+  function checkAnswer(userAns) {
+    if (!active) return;
+    clearInterval(timer);
+    const isCorrect = (userAns.toLowerCase().trim() === currentQ.answer);
+    if (isCorrect) {
+      score++;
+      showPopup("✅ Correct!", "correct");
+    } else {
+      if (mode === 'ai') {
+        aiScore++;
+        document.getElementById('aiScoreVal').innerText = aiScore;
+      }
+      showPopup(`❌ Wrong! Answer: ${currentQ.answer}`, "wrong");
+    }
+    qIndex++;
+    updateUI();
+    nextQuestion();
+  }
+
+  function startGame(selectedMode) {
+    mode = selectedMode;
+    classLevel = parseInt(document.getElementById('classSelect').value);
+    difficulty = document.getElementById('difficultySelect').value;
+    score = 0;
+    aiScore = 0;
+    qIndex = 0;
+    totalRounds = (mode === 'infinite') ? Infinity : 5;
+    active = true;
+    usedQuestions.clear();  // reset used questions for new game session
+    staticPool = filterStatic(classLevel, difficulty);
+
+    document.getElementById('gameScore').innerText = "0";
+    document.getElementById('gameTimer').innerText = "10";
+    const aiBlock = document.getElementById('aiBlock');
+    if (mode === 'ai') {
+      aiBlock.style.display = 'flex';
+      document.getElementById('aiScoreVal').innerText = "0";
+    } else {
+      aiBlock.style.display = 'none';
+    }
+
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('gameScreen').classList.add('active');
+    document.getElementById('typingInput').style.display = (mode === 'typing') ? 'block' : 'none';
+    document.getElementById('submitTypingBtn').style.display = (mode === 'typing') ? 'inline-block' : 'none';
+    document.getElementById('answersArea').innerHTML = '';
+    if (timer) clearInterval(timer);
+    nextQuestion();
+  }
+
+  function quitGame() {
+    active = false;
+    if (timer) clearInterval(timer);
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('menuScreen').classList.add('active');
+  }
+
+  function showLeaderboard() {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('leaderboardScreen').classList.add('active');
+    const listDiv = document.getElementById('leaderList');
+    let scores = JSON.parse(localStorage.getItem('iqMasterScores')) || [];
+    if (scores.length === 0) {
+      listDiv.innerHTML = '<div class="leaderboard-entry">✨ No scores yet. Play a game!</div>';
+      return;
+    }
+    listDiv.innerHTML = '';
+    scores.forEach((entry, idx) => {
+      const div = document.createElement('div');
+      div.className = 'leaderboard-entry';
+      div.innerHTML = `<span>#${idx + 1} ⭐ ${entry.score}</span><span>${entry.mode} • ${entry.date}</span>`;
+      listDiv.appendChild(div);
+    });
+  }
+
+  function backToMenu() {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('menuScreen').classList.add('active');
+  }
+
+  // ----- Attach event listeners -----
+  document.getElementById('mcqBtn').onclick = () => startGame('mcq');
+  document.getElementById('typingBtn').onclick = () => startGame('typing');
+  document.getElementById('infiniteBtn').onclick = () => startGame('infinite');
+  document.getElementById('aiBtn').onclick = () => startGame('ai');
+  document.getElementById('leaderboardBtn').onclick = showLeaderboard;
+  document.getElementById('quitGameBtn').onclick = quitGame;
+  document.getElementById('playAgainBtn').onclick = () => backToMenu();
+  document.getElementById('leaderboardFromResultBtn').onclick = showLeaderboard;
+  document.getElementById('backToMenuBtn').onclick = backToMenu;
+
+  // Register service worker if present
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(err => console.log("SW error:", err));
+    });
+  }
+</script>
 </body>
 </html>
